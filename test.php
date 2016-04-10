@@ -26,12 +26,9 @@
                     <li><a href=#>Home</a></li>
                     <li><a href=#>About</a></li>
                     <li><a href=#>Contact</a></li>
-                    <ul class="nav-login">
-                        <li><a href=#>Login</a></li>
-                        <li><a href=#>About</a></li>
-                    </ul>
+                    <li class="nav-login"><a href=#>Login</a></li>
+                    <li class="nav-login"><a href=#>Register</a></li>
                 </ul>
-
             </div>
         </div>
 
