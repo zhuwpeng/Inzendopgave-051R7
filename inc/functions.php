@@ -35,3 +35,12 @@ echo
             </div>
         </div>";
 }
+
+function get_footer() {
+	echo "        <div class=\"footer\">
+            <h2>This is the footer</h2>
+        </div>
+    </div>
+</body>
+</html>";
+}

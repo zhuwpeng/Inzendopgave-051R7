@@ -6,7 +6,6 @@ include "inc/functions.php";
 <?php
 get_header();
 ?>
-
         <div class="wrapper">
             <div class="side-right">
                 <div class="panel-head">
@@ -38,11 +37,6 @@ get_header();
                 </p>
             </div>
         </div>
-
-        <div class="footer">
-            <h2>This is the footer</h2>
-        </div>
-    </div>
-</body>
-
-</html>
+<?php 
+get_footer();
+?>
