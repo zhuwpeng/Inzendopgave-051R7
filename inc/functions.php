@@ -26,11 +26,11 @@ echo
             </div>
             <div class=\"navbar-wrap\">
                 <ul class=\"nav\">
-                    <li><a href=#>Home</a></li>
+                    <li><a href=\"index.php\">Home</a></li>
                     <li><a href=#>About</a></li>
                     <li><a href=#>Contact</a></li>
                     <li class=\"nav-login\"><a href=#>Login</a></li>
-                    <li class=\"nav-login\"><a href=#>Register</a></li>
+                    <li class=\"nav-login\"><a href=\"register.php\">Register</a></li>
                 </ul>
             </div>
         </div>";
