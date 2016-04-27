@@ -110,22 +110,23 @@ body {
 
 /*---------- Register Form -----------*/
 
-.register-form{
+.form{
 	text-align: center;
 	padding: 1%;
 	background: #eee;
 	border: solid 1px #acacac;
 	margin: 1% auto;
 	width: 30%;
+	min-width: 225px;
 }
 
-.register-form label{
+.form label{
 	display: block;
 	margin-top: 5%;
 	text-align: left;
 }
 
-.register-form .submit_reset{
+.form .submit_reset{
 	margin: 10% 0 5%;
 	text-align: center;
 }
@@ -149,3 +150,23 @@ span{
 .btn:last-of-type{
 	margin: 0;
 }
+
+/*---------- Login Form -----------*/
+
+.login .btn {
+	margin-top: 10%;
+	margin-bottom: 5%;
+
+}
+
+/*---------- Messages -----------*/
+
+.message {
+	text-align: center;
+}
+
+.error {
+	color: red;
+}
+
+
