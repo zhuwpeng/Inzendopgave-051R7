@@ -71,8 +71,8 @@ $checkAdminResult = mysqli_query($connect, $checkAdminQuery);
 if (mysqli_num_rows($checkAdminResult) == 0) {
     // Create administrator user
     
-    $password = md5('password');
-    $adminQuery = "INSERT INTO users (ID, name, surname, email, password, usertype) VALUES (NULL, 'Admin', 'Admin', 'admin@admin.com', '$password', 'Admin')";
+    $adminpass = md5('password');
+    $adminQuery = "INSERT INTO users (user_id, name, surname, username, email, password, usertype) VALUES (NULL, 'Admin', 'Admin', 'Admin', 'admin@admin.com', '$adminpass', 'Admin')";
     mysqli_query($connect, $adminQuery);
 
     $checkAdminQuery = "SELECT ID FROM users WHERE name = 'Admin'";

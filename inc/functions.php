@@ -2,7 +2,7 @@
 
 function get_header()
 {
-echo 
+echo
 "<!DOCTYPE html>
 <html>
 
@@ -17,24 +17,41 @@ echo
     <title>Inzendopgave 051R7</title>
 
 </head>
-
 <body>
     <div id=\"container\">
         <div class=\"header\">
             <div class=\"logo\">
                 <h1>The header</h1>
-            </div>
-            <div class=\"navbar-wrap\">
-                <ul class=\"nav\">
-                    <li><a href=#>Home</a></li>
-                    <li><a href=#>About</a></li>
-                    <li><a href=#>Contact</a></li>
-                    <li class=\"nav-login\"><a href=#>Login</a></li>
-                    <li class=\"nav-login\"><a href=#>Register</a></li>
-                </ul>
-            </div>
-        </div>";
+            </div>";
+			get_navbar();
+       echo "</div>";
 }
+
+function get_navbar() {
+	//Check if any user_id has been set in session
+	if (isset($_SESSION['user_id'])) {
+		echo "<div class=\"navbar-wrap\">
+					<ul class=\"nav\">
+					<li><a href=\"index.php\">Home</a></li>
+					<li><a href=#>About</a></li>
+					<li><a href=#>Contact</a></li>
+					<li class=\"nav-login\"><a href=\"logout.php\">Logout</a></li>
+					<li class=\"nav-login\"><a href=\"#\">Edit Posts</a></li>
+					</ul>
+				</div>";
+	} else {
+		echo "<div class=\"navbar-wrap\">
+					<ul class=\"nav\">
+					<li><a href=\"index.php\">Home</a></li>
+					<li><a href=#>About</a></li>
+					<li><a href=#>Contact</a></li>
+					<li class=\"nav-login\"><a href=\"login.php\">Login</a></li>
+					<li class=\"nav-login\"><a href=\"register.php\">Register</a></li>
+					</ul>
+				</div>";
+	}
+}
+
 
 function get_footer() {
 	echo "        <div class=\"footer\">

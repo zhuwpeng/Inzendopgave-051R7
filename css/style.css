@@ -107,3 +107,60 @@ body {
     background-color: #3385ff;
     clear: both;
 }
+
+/*---------- Register Form -----------*/
+
+.form{
+	text-align: center;
+	padding: 1%;
+	background: #eee;
+	border: solid 1px #acacac;
+	margin: 1% auto;
+	width: 30%;
+	min-width: 225px;
+}
+
+.form label{
+	display: block;
+	margin-top: 5%;
+	text-align: left;
+}
+
+.form .submit_reset{
+	margin: 10% 0 5%;
+	text-align: center;
+}
+
+
+input[type="password"],
+input[type="text"]{
+	width: 98%;
+}
+
+span{
+	display:block;
+	margin: 5px 0px;
+	text-align: left;
+}
+
+.btn{
+	margin: 0 20px 0 0;
+}
+
+.btn:last-of-type{
+	margin: 0;
+}
+
+/*---------- Login Form -----------*/
+
+.login .btn {
+	margin-top: 10%;
+	margin-bottom: 5%;
+
+}
+
+/*---------- Error message -----------*/
+
+.error {
+	color: red;
+}
