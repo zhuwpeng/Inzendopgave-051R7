@@ -159,8 +159,14 @@ span{
 
 }
 
-/*---------- Error message -----------*/
+/*---------- Messages -----------*/
+
+.message {
+	text-align: center;
+}
 
 .error {
 	color: red;
 }
+
+

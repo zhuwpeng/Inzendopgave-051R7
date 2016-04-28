@@ -14,7 +14,7 @@ echo
     <meta name=\"author\" content=\"\">
     <link rel=\"stylesheet\" type=\"text/css\" href=\"css/style.css\">
 
-    <title>Inzendopgave 051R7</title>
+    <title>Inzendopdracht 051R7</title>
 
 </head>
 <body>
@@ -60,4 +60,24 @@ function get_footer() {
     </div>
 </body>
 </html>";
+}
+
+
+function test_email($email)
+{
+	$match_pattern = '/^[a-zA-Z]*[a-zA-Z]*@[a-zA-Z]*[a-zA-Z]*.nl$/';
+	$match = preg_match($match_pattern, $email);
+
+	if($match){
+		$explode_result = explode("@", $email);
+		$explode_result_domain = explode(".", $explode_result[1]);
+		$name = $explode_result[0];
+		$domain =$explode_result_domain[0];
+
+		if(strlen($name) < 2 || strlen($domain) < 2){
+			return "invalid";
+		}
+	}else{
+		return "invalid";
+	}
 }

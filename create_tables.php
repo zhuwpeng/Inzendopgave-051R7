@@ -31,16 +31,17 @@ function make_table($connect, $tableparameters, $tablename)
 }
 
 $usersTable = "users";
-$usersQuery = "ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+$usersQuery = "user_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
                 name CHAR(30) NOT NULL,
                 ln_prefix CHAR(20),
                 surname CHAR(20) NOT NULL,
+				username CHAR(30) NOT NULL,
                 email CHAR(30) NOT NULL,
                 password VARCHAR(64) NOT NULL,
                 usertype CHAR(20) NOT NULL";
 
 $blogTable = "posts";
-$blogQuery = "ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+$blogQuery = "post_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
                 post_author INT(20) NOT NULL,
                 post_title TEXT NOT NULL,
                 post_content LONGTEXT NOT NULL,
@@ -65,7 +66,7 @@ if (!mysqli_select_db($connect, 'dbloi')) {
     
 }
 
-$checkAdminQuery = "SELECT ID FROM users WHERE name = 'Admin'";
+$checkAdminQuery = "SELECT user_id FROM users WHERE name = 'Admin'";
 $checkAdminResult = mysqli_query($connect, $checkAdminQuery);
 
 if (mysqli_num_rows($checkAdminResult) == 0) {
@@ -75,7 +76,7 @@ if (mysqli_num_rows($checkAdminResult) == 0) {
     $adminQuery = "INSERT INTO users (user_id, name, surname, username, email, password, usertype) VALUES (NULL, 'Admin', 'Admin', 'Admin', 'admin@admin.com', '$adminpass', 'Admin')";
     mysqli_query($connect, $adminQuery);
 
-    $checkAdminQuery = "SELECT ID FROM users WHERE name = 'Admin'";
+    $checkAdminQuery = "SELECT user_id FROM users WHERE name = 'Admin'";
     $checkAdminResult = mysqli_query($connect, $checkAdminQuery);
     
     if (mysqli_num_rows($checkAdminResult) > 0) {
