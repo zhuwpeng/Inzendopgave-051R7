@@ -62,6 +62,7 @@ body {
 .header .navbar-wrap ul .nav-login {
     float: right;
 }
+
 /*----------- Content wrapper ---------*/
 
 .wrapper {
@@ -72,7 +73,6 @@ body {
 }
 
 /*----------- Main content ------------*/
-
 .main-content {
     background-color: aquamarine;
     width: 68%;
@@ -80,26 +80,45 @@ body {
     padding: 2%;
 }
 
-.side-right {
-    width: 25%;
-    margin: 1%;
-    outline: solid 1px #3385ff;
-}
 
-.side-right .panel-head h3 {
-    margin: 0;
-    padding: 20px 0 10px 2%;
-    background-color: #3385ff;
-    
-}
 
 .main-content,
-.side-right {
+.side-wrapper {
     float: left;
     overflow: auto;
 }
 
+/*----------- Side content ------------*/
+.side-wrapper {
+    width: 25%;
+    padding: 1%;
+}
 
+.side-wrapper .panel-head h3 {
+    margin: 0;
+    padding: 10px 0 10px 2%;
+    background-color: #3385ff;
+}
+
+.user,
+.blogger{
+	padding: 1%;
+	margin:0;
+}
+
+.user {
+	margin-bottom: 10px;
+}
+
+.side-content ul {
+	padding-bottom: 10px;
+	margin-bottom: 0;
+}
+
+.small-wrapper {
+	outline: solid 1px #3385ff;
+	margin-bottom: 1%;
+}
 /*---------- Footer -------------------*/
 
 .footer {
@@ -163,6 +182,7 @@ span{
 
 .message {
 	text-align: center;
+	font-size: 200%;
 }
 
 .error {

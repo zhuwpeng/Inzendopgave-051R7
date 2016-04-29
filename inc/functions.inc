@@ -1,40 +1,10 @@
 <?php 
-
-function get_header()
-{
-echo
-"<!DOCTYPE html>
-<html>
-
-<head>
-    <meta charset=\"utf-8\">
-    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">
-    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">
-    <meta name=\"description\" content=\"\">
-    <meta name=\"author\" content=\"\">
-    <link rel=\"stylesheet\" type=\"text/css\" href=\"css/style.css\">
-
-    <title>Inzendopdracht 051R7</title>
-
-</head>
-<body>
-    <div id=\"container\">
-        <div class=\"header\">
-            <div class=\"logo\">
-                <h1>The header</h1>
-            </div>";
-			get_navbar();
-       echo "</div>";
-}
-
 function get_navbar() {
 	//Check if any user_id has been set in session
 	if (isset($_SESSION['user_id'])) {
 		echo "<div class=\"navbar-wrap\">
 					<ul class=\"nav\">
 					<li><a href=\"index.php\">Home</a></li>
-					<li><a href=#>About</a></li>
-					<li><a href=#>Contact</a></li>
 					<li class=\"nav-login\"><a href=\"logout.php\">Logout</a></li>
 					<li class=\"nav-login\"><a href=\"#\">Edit Posts</a></li>
 					</ul>
@@ -43,8 +13,6 @@ function get_navbar() {
 		echo "<div class=\"navbar-wrap\">
 					<ul class=\"nav\">
 					<li><a href=\"index.php\">Home</a></li>
-					<li><a href=#>About</a></li>
-					<li><a href=#>Contact</a></li>
 					<li class=\"nav-login\"><a href=\"login.php\">Login</a></li>
 					<li class=\"nav-login\"><a href=\"register.php\">Register</a></li>
 					</ul>
@@ -52,32 +20,32 @@ function get_navbar() {
 	}
 }
 
-
-function get_footer() {
-	echo "        <div class=\"footer\">
-            <h2>This is the footer</h2>
-        </div>
-    </div>
-</body>
-</html>";
-}
-
-
 function test_email($email)
 {
 	$match_pattern = '/^[a-zA-Z]*[a-zA-Z]*@[a-zA-Z]*[a-zA-Z]*.nl$/';
 	$match = preg_match($match_pattern, $email);
 
-	if($match){
+	if ($match) {
 		$explode_result = explode("@", $email);
 		$explode_result_domain = explode(".", $explode_result[1]);
 		$name = $explode_result[0];
 		$domain =$explode_result_domain[0];
 
-		if(strlen($name) < 2 || strlen($domain) < 2){
+		if (strlen($name) < 2 || strlen($domain) < 2) {
+			return "invalid";
+		} elseif ($name == 'admin' || $domain == 'admin') {
 			return "invalid";
 		}
-	}else{
+	} else {
 		return "invalid";
 	}
+}
+
+//Eigen error handler
+function error_msg($err_type, $err_msg, $err_file, $err_line){
+	echo "<div class = 'errorMsg'>";
+	echo "<p><b>Error:</b> Oops something went wrong! Please try again later or send an e-mail to admin@admin.nl <br />";
+	echo "Error type: $err_type: $err_msg in $err_file at line $err_line";
+	echo "</div>";
+
 }

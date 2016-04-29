@@ -1,30 +1,54 @@
-<?php 
-include "inc/functions.php";
-session_start();
-?>
-
-
 <?php
-get_header();
+include_once 'inc/header.inc';
 ?>
         <div class="wrapper">
-            <div class="side-right">
-                <div class="panel-head">
-                    <h3>Bloggers</h3>
-                </div>
-                <div class="side-content">
-                    <ul>
-                        <li><a href='/ligretchen-lopez-li'>Gretchen Lopez</a></li>
-                        <li><a href='/lidorothy-mcbride-li'>Dorothy Mcbride</a></li>
-                        <li><a href='/lidianne-hamilton-li'>Dianne Hamilton</a></li>
-                        <li><a href='/lifrederick-wood-li'>Frederick Wood</a></li>
-                        <li><a href='/lialfred-byrd-li'>Alfred Byrd</a></li>
-                        <li><a href='/lityler-parks-li'>Tyer Parks</a></li>
-                        <li><a href='/litimmy-brooks-li'>Timmy Brooks</a></li>
-                        <li><a href='/lijeanne-pittman-li'>Jeanne Pittman</a></li>
-                        <li><a href='/lidexter-colon-li'>Dexter Colon</a></li>
-                        <li><a href='/licurtis-wright-li'>Curtis Wright</a></li>
-                    </ul>
+            <div class="side-wrapper">
+            	<?php 
+            	if (isset($_SESSION['user_id'])) {
+            		//Retrieve user information
+            		$userQuery = "SELECT name, ln_prefix, surname, reg_date FROM users WHERE user_id='" . $_SESSION['user_id'] . "'";
+            		$userResult = mysqli_query($connect, $userQuery) or die("Could not retrieve information. " . mysqli_error($connect));
+            		$userData = mysqli_fetch_assoc($userResult);
+            		
+            		$name = $userData['name'];
+            		$ln_prefix = $userData['ln_prefix'];
+            		$surname = $userData['surname'];
+            		$reg_date = $userData['reg_date'];
+            		
+            		$explode = explode("-", $reg_date);
+            		$reorder = array($explode[2], $explode[1], $explode['0']);
+            		$date = implode("-", $reorder);
+            		
+            		echo '<div class="small-wrapper">
+		            		 <div class="panel-head">
+		            			<h3>User info</h3>
+		            		 </div>
+		            		 <div class="user side-content">
+		            			<p><label>Name: </label>' . $name . " " . $ln_prefix . " " . $surname . '<p>
+		            			<p><label>Member since: </label> ' . $date . '<p>
+		            		</div>
+	            		</div>';
+	            	}
+            	?>
+            	
+                <div class="small-wrapper">
+	                <div class="panel-head">
+	                    <h3>Bloggers</h3>
+	                </div>
+	                <div class="bloggers side-content">
+	                    <ul>
+	                        <li><a href='/ligretchen-lopez-li'>Gretchen Lopez</a></li>
+	                        <li><a href='/lidorothy-mcbride-li'>Dorothy Mcbride</a></li>
+	                        <li><a href='/lidianne-hamilton-li'>Dianne Hamilton</a></li>
+	                        <li><a href='/lifrederick-wood-li'>Frederick Wood</a></li>
+	                        <li><a href='/lialfred-byrd-li'>Alfred Byrd</a></li>
+	                        <li><a href='/lityler-parks-li'>Tyer Parks</a></li>
+	                        <li><a href='/litimmy-brooks-li'>Timmy Brooks</a></li>
+	                        <li><a href='/lijeanne-pittman-li'>Jeanne Pittman</a></li>
+	                        <li><a href='/lidexter-colon-li'>Dexter Colon</a></li>
+	                        <li><a href='/licurtis-wright-li'>Curtis Wright</a></li>
+	                    </ul>
+	                </div>
                 </div>
             </div>
 
@@ -39,5 +63,5 @@ get_header();
             </div>
         </div>
 <?php 
-get_footer();
+include_once 'inc/footer.inc';
 ?>
