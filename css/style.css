@@ -47,6 +47,7 @@ body {
 
 .header .navbar-wrap ul li a {
     display: block;
+    font-weight: bold;
     background-color: #3385ff;
     padding: 15px 20px;
     text-decoration: none;
@@ -55,8 +56,8 @@ body {
 }
 
 .header .navbar-wrap ul li a:hover {
-    color: #3385ff;
-    background-color: white;
+    color: white;
+    background-color: #194380;
 }
 
 .header .navbar-wrap ul .nav-login {
@@ -189,4 +190,24 @@ span{
 	color: red;
 }
 
+/*---------- Buttons ------------*/
 
+.side-content button{
+	background-color: #3385ff;
+    display: block;
+    border: none;
+	padding: 10px 5px;
+	text-align: center;
+	margin: 3% auto;
+    font-weight: bold;
+    width: 50%;
+}
+
+.side-content button:hover {
+    background-color: #194380;
+}
+
+.side-content button a {
+	text-decoration: none;
+    color: white;
+}
