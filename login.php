@@ -1,29 +1,46 @@
 <?php 
-include "/inc/functions.php";
-include "db_connect.php";
-session_start();
+include_once 'inc/header.inc';
 
 $message = "";
 $errorMsg = "";
-$usernameError = "";
+$emailError = "";
 $passwordError = "";
 $error = false;
 
 if (isset($_POST['submit']) && $_POST['submit'] == 'Login') {
 	//Clear spaces and remove slashes
-	$username = stripslashes(trim($_POST['username']));
+	$email = stripslashes(trim($_POST['email']));
 	$password = stripslashes(trim($_POST['password']));
 	
+	//Validate input
+	if (empty($email)) {
+		$usernameError = "Fill in your username!";
+		$error = true;
+	} else {
+		if(test_email($email) == "invalid") {
+			$emailError = "Invalid e-mail entered";
+			$error = true;
+		}
+	}
+	
+	if (empty($password)) {
+		$passwordError = "Fill in your password!";
+		$error = true;
+	}
+	
 	//Check if inputfields are empty
-	if (!empty($username) && !empty($password)) {
+	if ($error == false) {
 		//Check if user exist in database
-		$userQuery = "SELECT user_id, username, password FROM users WHERE username = '$username';";
+		$email = mysqli_real_escape_string($connect, $email);
+		$userQuery = "SELECT user_id, email, password FROM users WHERE email = '$email';";
 		$userResult = mysqli_query($connect, $userQuery) or die("Er is iets fout gegaan tijdens het ophalen van gegevens: " . mysqli_error($connect)) . ".";
 		$userRows = mysqli_num_rows($userResult);
 		
 		//Check if only one user exist
 		if ($userRows > 1) {
-			$message = "Er zijn meerdere gebruikers gevonden met de zelfde gebruikersnaam. Controleer de database.";
+			$message = "There are multiple users found with the same e-mail. Please check the database.";
+		} elseif($userRows == 0) {
+			$message = "Invalid username or password!";
 		} else {
 		//Retrieve data in an associative array
 			$userdata = mysqli_fetch_assoc($userResult);
@@ -33,32 +50,18 @@ if (isset($_POST['submit']) && $_POST['submit'] == 'Login') {
 				header("Location: index.php");
 			}
 		}
-	} else {
-		
-		if (empty($username)) {
-			$usernameError = "Fill in your username!";
-		}
-		
-		if (empty($password)) {
-			$passwordError = "Fill in your password!";
-		}
-	}
-	
+	} 
 }
 ?>
-
-<?php 
-get_header();
-?>
 <div class="wrapper">
-	<span><?php echo $message;?></span>
+<span class="message"><?php echo $message;?></span>
 <span class=error><?php echo $errorMsg;?></span>
 	<div class="form login">
-		<h2>Aanmeld formulier</h2>
+		<h2>Login</h2>
 		<form method="POST" action="login.php">	
-			<span class = error><?php echo $usernameError;?></span>
-			<label for="form-username">Username:</label>
-			<input type="text" id="form-username" name="username" value="<?php if(isset($_POST['username'])){echo htmlentities($_POST['username']);}else{ echo "";}?>">
+			<span class = error><?php echo $emailError;?></span>
+			<label for="form-username">E-mail:</label>
+			<input type="text" id="form-username" name="email" value="<?php if(isset($_POST['email'])){echo htmlentities($_POST['email']);}else{ echo "";}?>">
 			
 			<span class = error><?php echo $passwordError;?></span>
 			<label for="form-password">Password:</label>
@@ -68,7 +71,6 @@ get_header();
 		</form>
 	</div>
 </div>
-
 <?php 
-get_footer();
+include_once 'inc/footer.inc';
 ?>

@@ -1,6 +1,5 @@
 <?php 
-include "/inc/functions.php";
-include "db_connect.php";
+include_once 'inc/header.inc';
 
 $message = "";
 $errorMsg = "";
@@ -19,11 +18,11 @@ $error = array('name' => "",
 
 $errortype = array('empty' => array('name' => "No name filled in!",
 								'surname' => "No surname filled in!",
-								'username' => "No username filled in!",
 								'email' => "No e-mail filled in!",
 								'password' => "No password filled in!",
 								'confpassword' => "Need password confirmation!"),
-				'invalid' => array('email' => "E-mail must be as follows: '2 characters @ 2 characters .nl' (abc@de.nl)",
+				'invalid' => array('email' => "E-mail must not contain 'admin' and should be as follows: '2 characters @ 2 characters .nl' (ab@cd.nl)",
+								'emailexist' => "E-mail already exist!",
 								'confpassword' => "Passwords do not match!")
 );
 								
@@ -47,10 +46,20 @@ if (isset($_POST['submit']) && $_POST['submit'] == 'Submit') {
 		}
 	}
 	
-	//Validate email
+	
 	if (empty($error['email'])) {
-		if(test_email($stripTrim['email']) == "invalid") {
+		//Validate email
+		if (test_email($stripTrim['email']) == "invalid") {
 			$error['email']= $errortype['invalid']['email'];
+		} else {
+			//Check if e-mail exist
+			$emailQuery = "SELECT email FROM users WHERE email='" . $stripTrim['email'] . "'";
+			$emailResult = mysqli_query($connect, $emailQuery);
+
+			if (mysqli_num_rows($emailResult)!=0) {
+				$error['email'] = $errortype['invalid']['emailexist'];
+				
+			}
 		}
 	}
 	
@@ -70,30 +79,31 @@ if (isset($_POST['submit']) && $_POST['submit'] == 'Submit') {
 			}
 		}
 		
+		
 		$name = $escInput['name'];
 		$ln_prefix = $escInput['ln_prefix'];
 		$surname = $escInput['surname'];
-		$username = $escInput['username'];
 		$email = $escInput['email'];
 		$password = md5($escInput['password']);
+		$reg_date = date('Y-m-d');
 		
 		//Insert input into database
 		$inputQuery = "INSERT INTO users (user_id,
 											name,
 											ln_prefix,
 											surname,
-											username,
 											email,
 											password,
-											usertype)
+											usertype,
+											reg_date)
 									VALUES (NULL,
 											'$name',
 											'$ln_prefix',
 											'$surname',
-											'$username',
 											'$email',
 											'$password',
-											'member')";
+											'member',
+											'$reg_date')";
 		$resultQuery = mysqli_query($connect, $inputQuery);
 		
 		if (mysqli_affected_rows($connect) == 1) {
@@ -101,7 +111,6 @@ if (isset($_POST['submit']) && $_POST['submit'] == 'Submit') {
 			unset($_POST);
 		}
 	}
-	
 }
 
 if(isset($_POST['reset']) && $_POST['reset'] == "Reset"){
@@ -109,16 +118,11 @@ if(isset($_POST['reset']) && $_POST['reset'] == "Reset"){
 }
 
 ?>
-
-<?php 
-get_header();
-?>
-
 <div class="wrapper">
-	<span class="message"><?php echo $message;?></span>
+<span class="message"><?php echo $message;?></span>
 <span class=error><?php echo $errorMsg;?></span>
 	<div class="form register">
-		<h2>Aanmeld formulier</h2>
+		<h2>Register</h2>
 		<form method="POST" action="register.php">	
 			<span class="error"><?php if(isset($error['name'])) {echo $error['name'];}?></span>
 			<label for="form-name">Name:</label>
@@ -130,10 +134,6 @@ get_header();
 			<span class="error"><?php if(isset($error['surname'])) {echo $error['surname'];}?></span>
 			<label for="form-surname">Surname:</label>
 			<input type="text" id="form-surname" name="surname" value="<?php if(isset($_POST['surname'])){echo htmlentities($_POST['surname']);}else{ echo "";}?>">
-			
-			<span class="error"><?php if(isset($error['username'])) {echo $error['username'];}?></span>
-			<label for="form-username">Username:</label>
-			<input type="text" id="form-username" name="username" value="<?php if(isset($_POST['username'])){echo htmlentities($_POST['username']);}else{ echo "";}?>">
 
 			<span class="error"><?php if(isset($error['email'])) {echo $error['email'];}?></span>
 			<label for="form-email">E-mail:</label>
@@ -154,7 +154,6 @@ get_header();
 		</form>
 	</div>
 </div>
-
 <?php 
-get_footer();
+include_once 'inc/footer.inc';
 ?>

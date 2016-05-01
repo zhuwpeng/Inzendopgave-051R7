@@ -7,7 +7,7 @@ $host = "localhost";
 
 // Connect to database
 $connect = mysqli_connect($host, $user, $password)
-    or die("Kan geen verbinding maken met de database. Contrleer uw verbinding of uw database.");
+    or die("Could not connect to the database. " . mysqli_error($connect));
 
 function make_table($connect, $tableparameters, $tablename)
 {
@@ -31,18 +31,18 @@ function make_table($connect, $tableparameters, $tablename)
 }
 
 $usersTable = "users";
-$usersQuery = "user_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                name CHAR(30) NOT NULL,
-                ln_prefix CHAR(20),
-                surname CHAR(20) NOT NULL,
-				username CHAR(30) NOT NULL,
-                email CHAR(30) NOT NULL,
+$usersQuery = "user_id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                name VARCHAR(64) NOT NULL,
+                ln_prefix VARCHAR(64),
+                surname VARCHAR(64) NOT NULL,
+                email VARCHAR(64) NOT NULL,
                 password VARCHAR(64) NOT NULL,
-                usertype CHAR(20) NOT NULL";
+                usertype CHAR(20) NOT NULL,
+				reg_date DATE NOT NULL";
 
 $blogTable = "posts";
-$blogQuery = "post_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                post_author INT(20) NOT NULL,
+$blogQuery = "post_id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                post_author BIGINT NOT NULL,
                 post_title TEXT NOT NULL,
                 post_content LONGTEXT NOT NULL,
                 post_date DATETIME";
@@ -73,7 +73,8 @@ if (mysqli_num_rows($checkAdminResult) == 0) {
     // Create administrator user
     
     $adminpass = md5('password');
-    $adminQuery = "INSERT INTO users (user_id, name, surname, username, email, password, usertype) VALUES (NULL, 'Admin', 'Admin', 'Admin', 'admin@admin.com', '$adminpass', 'Admin')";
+    $reg_date = date('Y-m-d');
+    $adminQuery = "INSERT INTO users (user_id, name, surname, email, password, usertype, reg_date) VALUES (NULL, 'Admin', 'Admin', 'admin@admin.nl', '$adminpass', 'Admin', '$reg_date')";
     mysqli_query($connect, $adminQuery);
 
     $checkAdminQuery = "SELECT user_id FROM users WHERE name = 'Admin'";
@@ -81,7 +82,7 @@ if (mysqli_num_rows($checkAdminResult) == 0) {
     
     if (mysqli_num_rows($checkAdminResult) > 0) {
         echo "Administrator account has been created!<br />";
-        echo "The username is 'Admin'. <br />";
+        echo "The username is 'admin@admin.nl'. <br />";
         echo "The password is 'password'. <br />";
     } else {
         echo "The Administrator account already exist!";

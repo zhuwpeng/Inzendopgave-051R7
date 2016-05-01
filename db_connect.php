@@ -7,4 +7,4 @@ $db = "dbloi";
 
 // Connect to database
 $connect = mysqli_connect($host, $user, $password, $db)
-    or die("Kan geen verbinding maken met de database. Contrleer uw verbinding of uw database.");
+    or die("Cannot connect to the database." . mysqli_error($connect));

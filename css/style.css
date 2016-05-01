@@ -47,6 +47,7 @@ body {
 
 .header .navbar-wrap ul li a {
     display: block;
+    font-weight: bold;
     background-color: #3385ff;
     padding: 15px 20px;
     text-decoration: none;
@@ -55,13 +56,31 @@ body {
 }
 
 .header .navbar-wrap ul li a:hover {
-    color: #3385ff;
-    background-color: white;
+    background-color: #194380;
 }
 
 .header .navbar-wrap ul .nav-login {
     float: right;
 }
+
+/*
+.header .navbar-wrap ul .nav-login button {
+	font-size: 1em;
+	display: block;
+	border: none;
+    font-weight: bold;
+    background-color: #3385ff;
+    padding: 15px 20px;
+    text-decoration: none;
+    color: white;
+    overflow: hidden;
+}
+
+.header .navbar-wrap ul .nav-login button:hover {
+	 background-color: #194380;
+}
+*/
+
 /*----------- Content wrapper ---------*/
 
 .wrapper {
@@ -72,7 +91,6 @@ body {
 }
 
 /*----------- Main content ------------*/
-
 .main-content {
     background-color: aquamarine;
     width: 68%;
@@ -80,26 +98,43 @@ body {
     padding: 2%;
 }
 
-.side-right {
-    width: 25%;
-    margin: 1%;
-    outline: solid 1px #3385ff;
-}
-
-.side-right .panel-head h3 {
-    margin: 0;
-    padding: 20px 0 10px 2%;
-    background-color: #3385ff;
-    
-}
-
 .main-content,
-.side-right {
+.side-wrapper {
     float: left;
     overflow: auto;
 }
 
+/*----------- Side content ------------*/
+.side-wrapper {
+    width: 25%;
+    padding: 1%;
+}
 
+.side-wrapper .panel-head h3 {
+    margin: 0;
+    padding: 10px 0 10px 2%;
+    background-color: #3385ff;
+}
+
+.user,
+.blogger{
+	padding: 1%;
+	margin:0;
+}
+
+.user {
+	margin-bottom: 10px;
+}
+
+.side-content ul {
+	padding-bottom: 10px;
+	margin-bottom: 0;
+}
+
+.small-wrapper {
+	outline: solid 1px #3385ff;
+	margin-bottom: 1%;
+}
 /*---------- Footer -------------------*/
 
 .footer {
@@ -112,7 +147,7 @@ body {
 
 .form{
 	text-align: center;
-	padding: 1%;
+	padding: 2%;
 	background: #eee;
 	border: solid 1px #acacac;
 	margin: 1% auto;
@@ -123,6 +158,7 @@ body {
 .form label{
 	display: block;
 	margin-top: 5%;
+	margin-left: 2%;
 	text-align: left;
 }
 
@@ -134,7 +170,7 @@ body {
 
 input[type="password"],
 input[type="text"]{
-	width: 98%;
+	width: 96%;
 }
 
 span{
@@ -153,20 +189,56 @@ span{
 
 /*---------- Login Form -----------*/
 
-.login .btn {
+.login .btn,
+.post .btn{
 	margin-top: 10%;
 	margin-bottom: 5%;
+}
 
+/*---------- Post Form -----------*/
+
+.post {
+	width: 45%;
+}
+
+textarea {
+	max-width: 96%;
+	
 }
 
 /*---------- Messages -----------*/
 
 .message {
 	text-align: center;
+	font-size: 200%;
 }
 
 .error {
 	color: red;
 }
 
+/*---------- Buttons ------------*/
 
+.side-content .btn,
+.side-content .btn{
+	
+	text-align: center;
+	margin: 3% auto;
+    font-weight: bold;
+    width: 50%;
+}
+
+.side-content .btn:hover,
+.side-content .btn:hover  {
+    background-color: #194380;
+}
+
+.side-content .btn,
+.side-content .btn {
+	background-color: #3385ff;
+    display: block;
+    border: none;
+	padding: 10px 5px;
+	text-decoration: none;
+    color: white;
+}
