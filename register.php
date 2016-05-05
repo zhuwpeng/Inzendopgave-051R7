@@ -29,20 +29,18 @@ $errortype = array('empty' => array('name' => "No name filled in!",
 if (isset($_POST['submit']) && $_POST['submit'] == 'Submit') {
 	//Stripslashes and trim input while leaving out $_POST['submit']
 	foreach ($_POST as $key => $input) {
-		if ($key != "submit")
-		$stripTrim[$key] = stripslashes(trim($input));
-	}
-	
-	//Check if fields are filled in
-	foreach ($stripTrim as $key => $input) {
-		if (empty($input)) {
-			if ($key == "ln_prefix") {
-				$stripTrim[$key] = NULL;
+		if ($key != "submit") {
+			$stripTrim[$key] = stripslashes(trim($input));
+			//Check if fields are filled in
+			if (empty($input)) {
+				if ($key == "ln_prefix") {
+					$stripTrim[$key] = NULL;
+				} else {
+					$error[$key] = $errortype['empty'][$key];
+				}
 			} else {
-			$error[$key] = $errortype['empty'][$key];
+				$error[$key] = "";
 			}
-		} else {
-			$error[$key] = "";
 		}
 	}
 	

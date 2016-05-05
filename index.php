@@ -3,19 +3,15 @@ include_once 'inc/header.inc';
 ?>
         <div class="wrapper">
             <div class="side-wrapper">
-            	<div class="small-wrapper">
-            		 <div class="panel-head">
-            			<?php 
-            			if (isset($_SESSION['user_id'])) {
-            				echo '<h3>User info</h3>';
-            			}else{
-            				echo '<h3>Login or register</h3>';	
-            			}
+            	
+            	<?php 
+            	if (isset($_SESSION['user_id'])) {
+            		echo '<div class="small-wrapper">
+	            			<div class="panel-head">
+	            				<h3>Welcome back!</h3>
+	            			</div>';
+            	}
             			
-            			?>
-            		 </div>
-            		 <div class="user side-content">
-            	<?php
             	if (isset($_SESSION['user_id'])) {
             		//Retrieve user information
             		$userQuery = "SELECT name, ln_prefix, surname, reg_date FROM users WHERE user_id='" . $_SESSION['user_id'] . "'";
@@ -31,16 +27,16 @@ include_once 'inc/header.inc';
             		$reorder = array($explode[2], $explode[1], $explode['0']);
             		$date = implode("-", $reorder);
             		
-            		echo '<p><label>Name: </label>' . $name . " " . $ln_prefix . " " . $surname . '<p>
-		            		<p><label>Member since: </label> ' . $date . '<p>';
-	            	} else {
-	            		echo '<button class="login"><a href="login.php">Login</a></button>
-            				<button class="register"><a href="register.php">Register</a></button>';
+            		echo '	<div class="user side-content">
+	            				<p><label>Name: </label>' . $name . " " . $ln_prefix . " " . $surname . '<p>
+			            		<p><label>Member since: </label> ' . $date . '<p>
+	            			</div>
+	            		</div>';
 	            	}
             	?>
             	
-            		</div>
-	            </div>
+            		
+	            
 	            
                 <div class="small-wrapper">
 	                <div class="panel-head">
