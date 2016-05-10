@@ -1,5 +1,5 @@
 <?php
-include_once 'inc/header.inc';
+include 'inc/header.inc';
 ?>
         <div class="wrapper">
             <div class="side-wrapper">
@@ -35,26 +35,18 @@ include_once 'inc/header.inc';
 	            	}
             	?>
             	
-            		
-	            
-	            
                 <div class="small-wrapper">
 	                <div class="panel-head">
 	                    <h3>Bloggers</h3>
 	                </div>
 	                <div class="bloggers side-content">
+	                
 	                    <ul>
-	                        <li><a href='/ligretchen-lopez-li'>Gretchen Lopez</a></li>
-	                        <li><a href='/lidorothy-mcbride-li'>Dorothy Mcbride</a></li>
-	                        <li><a href='/lidianne-hamilton-li'>Dianne Hamilton</a></li>
-	                        <li><a href='/lifrederick-wood-li'>Frederick Wood</a></li>
-	                        <li><a href='/lialfred-byrd-li'>Alfred Byrd</a></li>
-	                        <li><a href='/lityler-parks-li'>Tyer Parks</a></li>
-	                        <li><a href='/litimmy-brooks-li'>Timmy Brooks</a></li>
-	                        <li><a href='/lijeanne-pittman-li'>Jeanne Pittman</a></li>
-	                        <li><a href='/lidexter-colon-li'>Dexter Colon</a></li>
-	                        <li><a href='/licurtis-wright-li'>Curtis Wright</a></li>
+	                    <?php
+	                    	get_bloggers($connect);
+	                    ?>
 	                    </ul>
+	                
 	                </div>
                 </div>
             </div>
@@ -70,5 +62,5 @@ include_once 'inc/header.inc';
             </div>
         </div>
 <?php 
-include_once 'inc/footer.inc';
+include 'inc/footer.inc';
 ?>

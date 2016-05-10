@@ -1,4 +1,6 @@
 <?php
+include "db_connect.php";
+
 // $errors = array('empty' => array('name' => "No name filled in!",
 // 		'surname' => "No surname filled in!",
 // 		'email' => "No e-mail filled in!",
@@ -42,6 +44,7 @@
 // echo $error['name'];
 
 $name = 'test';
+$list = "";
 
 //email test
 $email = 'test@teste.nl';
@@ -57,6 +60,20 @@ if($match){
 	echo "$name <br />";
 	echo "$domain <br />";
 }
+//$query = "SELECT name, ln_prefix, surname FROM users WHERE name != 'Admin'";
+$query = "SELECT name, ln_prefix, surname FROM users";
+$queryResult = mysqli_query($connect, $query);
+$numRows = mysqli_num_rows($queryResult);
+
+if($numRows > 0) {
+	while($bloggers = mysqli_fetch_assoc($queryResult)){
+		//$list.= "<li>". ucfirst($bloggers['name']) . " " . (isset($bloggers['ln_prefix']) ? ucfirst(stripslashes($bloggers['ln_prefix'])): '') . " " .ucfirst($bloggers['surname']) ."</li>";
+		$list.= "<li><a href=#>". $bloggers['name'] . " " . stripslashes($bloggers['ln_prefix']) . " " . $bloggers['surname'] ."</a></li>";
+	}
+} else {
+	echo "No bloggers registered";
+}
+
 ?>
 
 <!DOCTYPE HTML>
@@ -73,5 +90,11 @@ if (isset($_GET['name']) && $_GET['name']=='test') {
 	echo "These are " . $_GET['name'] ."'s blog post.";
 	}
 ?>
+<ul>
+<?php 
+echo $list;
+?>
+</ul>
+
 </BODY>
 </HTML>

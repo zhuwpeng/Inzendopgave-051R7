@@ -5,8 +5,9 @@ function get_navbar() {
 		echo "<div class=\"navbar-wrap\">
 					<ul class=\"nav\">
 					<li><a href=\"index.php\">Home</a></li>
+					<li><a href=\"post.php\">Create Post</a></li>
+					<li><a href=\"#\">Edit Posts</a></li>
 					<li class=\"nav-login\"><a href=\"logout.php\">Logout</a></li>
-					<li class=\"nav-login\"><a href=\"#\">Edit Posts</a></li>
 					</ul>
 				</div>";
 	} else {
@@ -48,4 +49,51 @@ function error_msg($err_type, $err_msg, $err_file, $err_line){
 	echo "Error type: $err_type: $err_msg in $err_file at line $err_line";
 	echo "</div>";
 
+}
+
+//Retrieve bloggers
+function get_bloggers($connect) {
+	$query = "SELECT name, ln_prefix, surname FROM users WHERE name != 'Admin'";
+	$queryResult = mysqli_query($connect, $query);
+	$numRows = mysqli_num_rows($queryResult);
+	
+	if($numRows > 0) {
+		while($bloggers = mysqli_fetch_assoc($queryResult)){
+			echo "<li><a href=?name=". $bloggers['name'] . ">". $bloggers['name'] . " " . stripslashes($bloggers['ln_prefix']) . " " . $bloggers['surname'] ."</a></li>";
+		}
+	} else {
+		echo "No bloggers registered";
+	}
+	
+}
+
+function random_char($string) {
+	$length = strlen($string);
+	$position = mt_rand(0, $length - 1);
+	return($string[$position]);
+}
+
+function random_string($charsetString, $length) {
+	$returnString = "";
+	for ($x = 0; $x < $length; $x++) {
+		$returnString .= random_char($charsetString);
+	}
+	return($returnString);
+}
+
+function random_password() {
+	mt_srand((double)microtime() * 1000000);
+	$smallSet = "abcdefghijklmnopqrstuvwxyz";
+	$capitalSet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	$specialSet = "!@#$%^&*(){}[]?";
+	$numbersSet = "0123456789";
+	
+	$randomPassword = random_string($smallSet, 1);
+	$randomPassword .= random_string($capitalSet, 1);
+	$randomPassword .= random_string($specialSet, 1);
+	$randomPassword .= random_string($numbersSet, 1);
+	
+	$randomPassword .= random_string($smallSet.$capitalSet.$specialSet.$numbersSet, 4);
+	
+	return str_shuffle($randomPassword);
 }
