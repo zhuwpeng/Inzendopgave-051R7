@@ -10,9 +10,7 @@ include 'inc/header.inc';
 	            			<div class="panel-head">
 	            				<h3>Welcome back!</h3>
 	            			</div>';
-            	}
-            			
-            	if (isset($_SESSION['user_id'])) {
+            	
             		//Retrieve user information
             		$userQuery = "SELECT name, ln_prefix, surname, reg_date FROM users WHERE user_id='" . $_SESSION['user_id'] . "'";
             		$userResult = mysqli_query($connect, $userQuery) or die("Could not retrieve information. " . mysqli_error($connect));
@@ -25,11 +23,11 @@ include 'inc/header.inc';
             		
             		$explode = explode("-", $reg_date);
             		$reorder = array($explode[2], $explode[1], $explode['0']);
-            		$date = implode("-", $reorder);
+            		$regisDate = implode("-", $reorder);
             		
             		echo '	<div class="user side-content">
 	            				<p><label>Name: </label>' . $name . " " . $ln_prefix . " " . $surname . '<p>
-			            		<p><label>Member since: </label> ' . $date . '<p>
+			            		<p><label>Member since: </label> ' . $regisDate . '<p>
 	            			</div>
 	            		</div>';
 	            	}
@@ -52,13 +50,62 @@ include 'inc/header.inc';
             </div>
 
             <div class="main-content">
-                <h2>The main content</h2>
+            <?php 
+            if (isset($_GET['name'])){
+            	$bloggerName = $_GET['name'];
+            	//Retrieve posts made by the blogger and blogger data
+            	$bloggerdataQuery = "SELECT user_id, ln_prefix, surname FROM users WHERE name ='$bloggerName'";
+            	$bloggerdataResult = mysqli_query($connect, $bloggerdataQuery) or die("Could not retrieve information. " . mysqli_error($connect));
+            	
+            	if (mysqli_num_rows($bloggerdataResult) == 1) {
+            		$bloggerData = mysqli_fetch_assoc($bloggerdataResult);
+            		$bloggerID = $bloggerData['user_id'];
+            		$bloggerPref = $bloggerData['ln_prefix'];
+            		$bloggerSur = $bloggerData['surname'];
+            	}
+            	
+            	$blogpostQuery = "SELECT post_author, post_title, post_content, post_date FROM posts WHERE post_author ='$bloggerID' ORDER BY post_date DESC";
+            	$blogpostResult = mysqli_query($connect, $blogpostQuery) or die("Could not retrieve information. " . mysqli_error($connect));
+            	
+            	if (mysqli_num_rows($blogpostResult) > 0) {
+            		while ($blogpost = mysqli_fetch_assoc($blogpostResult)){
+            			$title = $blogpost['post_title'];
+            			$content = nl2br($blogpost['post_content']);
+            			$postDate = $blogpost['post_date'];
+            			
+            			echo "<div style='padding-bottom:20px;'>
+		            			<div style='border-bottom:1px solid #d3d3d3;'>
+		            			By <b>$bloggerName $bloggerPref $bloggerSur</b> - Title: <b>$title</b> - $postDate
+		            			</div>
+		            			<div style=' border-bottom: 1px solid black; padding:20px; '>
+		            			$content
+		            			</div>
+		            		</div>";
+            		}
+            	} else {
+            		echo "<h2>This user hasn't posted anything yet!</h2>";
+            	}
+            	
+            } elseif (isset($_GET['page']) && $_GET['page']=="editposts") {
+            	
+            	
+            ?>
+            	
+            <?php 
+            }else{
+            ?>
+                <h2>Welcome to Bloggers</h2>
                 <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin eleifend metus et dui dictum rhoncus. In vel lacinia dui. Nulla hendrerit nibh eget turpis viverra, vitae eleifend sem dignissim. Ut id maximus nunc. Quisque placerat mi velit, vitae pellentesque tortor ultricies ac. Etiam sed mollis metus, vitae laoreet leo. Ut ultrices nulla est, ut bibendum nunc finibus vel. Mauris non aliquet urna. Interdum et malesuada fames ac ante ipsum primis in faucibus. Duis in urna nec leo convallis ullamcorper. Ut quis tincidunt elit. Fusce sem ex, vulputate sed mollis id, efficitur sed velit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Ut bibendum ac nisl a porttitor. Mauris ut magna ligula.
+                    Bloggers is a website where everyone can register and create blogposts.
+                    It is a realy basic and easy to use website where people can write everything they want.
                 </p>
                 <p>
-                    Suspendisse hendrerit venenatis volutpat. Aenean nec dui vitae quam venenatis imperdiet. Donec rutrum leo at varius tincidunt. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Ut lorem metus, efficitur vel dui ut, mattis venenatis metus. In turpis felis, sodales vitae porta vitae, posuere in purus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
+                    All you have to do is register an account by clicking on "Register" on the right side of the menu. Once you have registered your account you can login and start posting whatever comes to your mind or manage your earlier blogposts.
+                    On the left side you can see all the bloggers that are creating content on Blogger including you! When you click on any of them, their blogposts will show up in this space replacing the text you are currently reading.
                 </p>
+            <?php 
+            }
+            ?>
             </div>
         </div>
 <?php 

@@ -26,16 +26,19 @@ if (isset($_POST['submit']) && $_POST['submit'] == 'Submit') {
 	foreach ($_POST as $key => $input) {
 		if ($key != "submit") {
 			$stripTrim[$key] = stripslashes(trim($input));
-			//Check if fields are filled in
-			if (empty($input)) {
-				if ($key == "ln_prefix") {
-					$stripTrim[$key] = NULL;
-				} else {
-					$error[$key] = $errortype['empty'][$key];
-				}
+		}
+	}
+	
+	//Check if userinputs are empty
+	foreach ($stripTrim as $key => $input){
+		if (empty($input)) {
+			if ($key == "ln_prefix") {
+				$stripTrim[$key] = NULL;
 			} else {
-				$error[$key] = "";
+				$error[$key] = $errortype['empty'][$key];
 			}
+		} else {
+			$error[$key] = "";
 		}
 	}
 	
@@ -53,22 +56,14 @@ if (isset($_POST['submit']) && $_POST['submit'] == 'Submit') {
 				
 			}
 		}
-	}
-	
-// 	if (empty($error['confpassword'])) {
-// 		if ($stripTrim['confpassword'] != $stripTrim['password']) {
-// 			$error['confpassword']= $errortype['invalid']['confpassword'];
-// 		}
-// 	}
+	}	
 	
 	$error = array_filter($error);
 	
 	if(empty($error)) {
 		//Escape all input values
 		foreach($stripTrim as $key => $input) {
-			if ($key != "confpassword") {
-				$escInput[$key] = mysqli_real_escape_string($connect, $input);
-			}
+			$escInput[$key] = mysqli_real_escape_string($connect, $input);
 		}
 		
 		$name = ucfirst($escInput['name']);

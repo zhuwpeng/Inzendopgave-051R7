@@ -6,7 +6,7 @@ function get_navbar() {
 					<ul class=\"nav\">
 					<li><a href=\"index.php\">Home</a></li>
 					<li><a href=\"post.php\">Create Post</a></li>
-					<li><a href=\"#\">Edit Posts</a></li>
+					<li><a href=\"?page=editposts\">Edit Posts</a></li>
 					<li class=\"nav-login\"><a href=\"logout.php\">Logout</a></li>
 					</ul>
 				</div>";

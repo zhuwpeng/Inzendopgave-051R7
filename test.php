@@ -73,6 +73,14 @@ if($numRows > 0) {
 } else {
 	echo "No bloggers registered";
 }
+$randomArray = array('test1' => "",
+					'test2' => "");
+					
+$randomArray = array_filter($randomArray);
+
+var_dump(empty($randomArray));
+
+echo date('Y-m-d H:i:s');
 
 ?>
 
