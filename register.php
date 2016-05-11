@@ -11,41 +11,36 @@ $passwordError = "";
 
 $error = array('name' => "",
 			'surname' => "",
-			'email' => "",
-			'password' => "",
-			'confpassword' => "",
+			'email' => ""
 );
 
 $errortype = array('empty' => array('name' => "No name filled in!",
 								'surname' => "No surname filled in!",
-								'email' => "No e-mail filled in!",
-								'password' => "No password filled in!",
-								'confpassword' => "Need password confirmation!"),
+								'email' => "No e-mail filled in!"),
 				'invalid' => array('email' => "E-mail must not contain 'admin' and should be as follows: '2 characters @ 2 characters .nl' (ab@cd.nl)",
-								'emailexist' => "E-mail already exist!",
-								'confpassword' => "Passwords do not match!")
+								'emailexist' => "E-mail already exist!")
 );
 								
 if (isset($_POST['submit']) && $_POST['submit'] == 'Submit') {
 	//Stripslashes and trim input while leaving out $_POST['submit']
 	foreach ($_POST as $key => $input) {
-		if ($key != "submit")
-		$stripTrim[$key] = stripslashes(trim($input));
+		if ($key != "submit") {
+			$stripTrim[$key] = stripslashes(trim($input));
+		}
 	}
 	
-	//Check if fields are filled in
-	foreach ($stripTrim as $key => $input) {
+	//Check if userinputs are empty
+	foreach ($stripTrim as $key => $input){
 		if (empty($input)) {
 			if ($key == "ln_prefix") {
 				$stripTrim[$key] = NULL;
 			} else {
-			$error[$key] = $errortype['empty'][$key];
+				$error[$key] = $errortype['empty'][$key];
 			}
 		} else {
 			$error[$key] = "";
 		}
 	}
-	
 	
 	if (empty($error['email'])) {
 		//Validate email
@@ -61,30 +56,22 @@ if (isset($_POST['submit']) && $_POST['submit'] == 'Submit') {
 				
 			}
 		}
-	}
-	
-	if (empty($error['confpassword'])) {
-		if ($stripTrim['confpassword'] != $stripTrim['password']) {
-			$error['confpassword']= $errortype['invalid']['confpassword'];
-		}
-	}
+	}	
 	
 	$error = array_filter($error);
 	
 	if(empty($error)) {
 		//Escape all input values
 		foreach($stripTrim as $key => $input) {
-			if ($key != "confpassword") {
-				$escInput[$key] = mysqli_real_escape_string($connect, $input);
-			}
+			$escInput[$key] = mysqli_real_escape_string($connect, $input);
 		}
 		
-		
-		$name = $escInput['name'];
+		$name = ucfirst($escInput['name']);
 		$ln_prefix = $escInput['ln_prefix'];
-		$surname = $escInput['surname'];
+		$surname = ucfirst($escInput['surname']);
 		$email = $escInput['email'];
-		$password = md5($escInput['password']);
+		$password = random_password();
+		$passencrypt = md5($password);
 		$reg_date = date('Y-m-d');
 		
 		//Insert input into database
@@ -101,14 +88,27 @@ if (isset($_POST['submit']) && $_POST['submit'] == 'Submit') {
 											'$ln_prefix',
 											'$surname',
 											'$email',
-											'$password',
+											'$passencrypt',
 											'member',
 											'$reg_date')";
 		$resultQuery = mysqli_query($connect, $inputQuery);
 		
 		if (mysqli_affected_rows($connect) == 1) {
-			$message = "Uw account is met success aangemaakt!";
-			unset($_POST);
+			$confirmation = (mail($email, "Registratie",
+"Welcome to Bloggers!\r\n
+This is a confirmation e-mail from your registration.\r\n
+Below are your username and password. Keep them somewhere safe\r\n
+and never share your password to anyone!\r\n
+Username: $email\r\n
+Password: $password\r\n
+\r\n
+Thank you for your registration and have fun blogging!\r\n",
+"Van: info@bloggers.nl"));
+			
+			if ($confirmation) {
+				$message = "Uw account is met success aangemaakt!";
+				unset($_POST);
+			}
 		}
 	}
 }
@@ -138,14 +138,6 @@ if(isset($_POST['reset']) && $_POST['reset'] == "Reset"){
 			<span class="error"><?php if(isset($error['email'])) {echo $error['email'];}?></span>
 			<label for="form-email">E-mail:</label>
 			<input type="text" id="form-email" name="email" value="<?php if(isset($_POST['email'])){echo htmlentities($_POST['email']);}else{ echo "";}?>">
-			
-			<span class="error"><?php if(isset($error['password'])) {echo $error['password'];}?></span>
-			<label for="form-password">Password:</label>
-			<input type="password" id="form-password" name="password" value="<?php if(isset($_POST['password'])){ echo htmlentities($_POST['password']);}else{ echo "";}?>">
-			
-			<span class="error"><?php if(isset($error['confpassword'])) {echo $error['confpassword'];}?></span>
-			<label for="form-confpassword">Confirm password:</label>
-			<input type="password" id="form-confpassword" name="confpassword" value="<?php if(isset($_POST['confpassword'])){ echo htmlentities($_POST['confpassword']);}else{ echo "";}?>">
 			
 			<div class="submit_reset">
 				<input class="btn" type="submit" name="submit" value="Submit">

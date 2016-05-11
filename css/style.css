@@ -202,8 +202,7 @@ span{
 }
 
 textarea {
-	max-width: 96%;
-	
+	width: 96%;
 }
 
 /*---------- Messages -----------*/
