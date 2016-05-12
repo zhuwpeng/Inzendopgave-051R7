@@ -45,7 +45,8 @@ $blogQuery = "post_id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
                 post_author BIGINT NOT NULL,
                 post_title TEXT NOT NULL,
                 post_content LONGTEXT NOT NULL,
-                post_date DATETIME";
+                post_date DATETIME,
+				post_edited BOOLEAN NULL";
 
 // Check if database exist
 if (!mysqli_select_db($connect, 'dbloi')) {

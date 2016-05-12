@@ -12,7 +12,7 @@ include_once 'inc/header.inc';
 	            			</div>';
             	
             		//Retrieve user information
-            		$userQuery = "SELECT name, ln_prefix, surname, reg_date FROM users WHERE user_id='" . $_SESSION['user_id'] . "'";
+            		$userQuery = "SELECT user_id, name, ln_prefix, surname, reg_date FROM users WHERE user_id='" . $_SESSION['user_id'] . "'";
             		$userResult = mysqli_query($connect, $userQuery) or die("Could not retrieve information. " . mysqli_error($connect));
             		$userData = mysqli_fetch_assoc($userResult);
             		
@@ -50,62 +50,50 @@ include_once 'inc/header.inc';
             </div>
 
             <div class="main-content">
-            <?php 
-            if (isset($_GET['name'])){
-            	$bloggerName = $_GET['name'];
-            	//Retrieve posts made by the blogger and blogger data
-            	$bloggerdataQuery = "SELECT user_id, ln_prefix, surname FROM users WHERE name ='$bloggerName'";
-            	$bloggerdataResult = mysqli_query($connect, $bloggerdataQuery) or die("Could not retrieve information. " . mysqli_error($connect));
-            	
-            	if (mysqli_num_rows($bloggerdataResult) == 1) {
-            		$bloggerData = mysqli_fetch_assoc($bloggerdataResult);
-            		$bloggerID = $bloggerData['user_id'];
-            		$bloggerPref = $bloggerData['ln_prefix'];
-            		$bloggerSur = $bloggerData['surname'];
-            	}
-            	
-            	$blogpostQuery = "SELECT post_author, post_title, post_content, post_date FROM posts WHERE post_author ='$bloggerID' ORDER BY post_date DESC";
-            	$blogpostResult = mysqli_query($connect, $blogpostQuery) or die("Could not retrieve information. " . mysqli_error($connect));
-            	
-            	if (mysqli_num_rows($blogpostResult) > 0) {
-            		while ($blogpost = mysqli_fetch_assoc($blogpostResult)){
-            			$title = $blogpost['post_title'];
-            			$content = nl2br($blogpost['post_content']);
-            			$postDate = $blogpost['post_date'];
-            			
-            			echo "<div style='padding-bottom:20px;'>
-		            			<div style='border-bottom:1px solid #d3d3d3;'>
-		            			By <b>$bloggerName $bloggerPref $bloggerSur</b> - Title: <b>$title</b> - $postDate
-		            			</div>
-		            			<div style=' border-bottom: 1px solid black; padding:20px; '>
-		            			$content
-		            			</div>
-		            		</div>";
-            		}
-            	} else {
-            		echo "<h2>This user hasn't posted anything yet!</h2>";
-            	}
-            	
-            } elseif (isset($_GET['page']) && $_GET['page']=="editposts") {
-            	
-            	
-            ?>
-            	
-            <?php 
-            }else{
-            ?>
-                <h2>Welcome to Bloggers</h2>
-                <p>
-                    Bloggers is a website where everyone can register and create blogposts.
-                    It is a realy basic and easy to use website where people can write everything they want.
-                </p>
-                <p>
-                    All you have to do is register an account by clicking on "Register" on the right side of the menu. Once you have registered your account you can login and start posting whatever comes to your mind or manage your earlier blogposts.
-                    On the left side you can see all the bloggers that are creating content on Blogger including you! When you click on any of them, their blogposts will show up in this space replacing the text you are currently reading.
-                </p>
-            <?php 
-            }
-            ?>
+	            <?php 
+	            if (isset($_GET['id'])){
+	            	//Retrieve all the blogposts from any blogger in the list
+	            	get_blogposts($_GET['id'], $connect, false);
+	            } elseif (isset($_GET['page']) && $_GET['page']=="editposts" && isset($_SESSION['user_id'])) {?>
+	            	<h2>Edit or remove your blogposts</h2>
+	            	<table border= 1>
+		            	<tr>
+			            	<th>Title</th>
+			            	<th>Date</th>
+			            	<th></th>
+			            	<th></th>
+			            </tr>
+	            <?php
+	            	//Retrieve the blogposts from the currently logged in blogger
+	            	get_blogposts($_SESSION['user_id'], $connect, true);
+	            ?>
+	            	</table>
+	            <?php 
+	            } elseif(isset($_GET['deletePID']) && isset($_SESSION['user_id'])) {
+	            	//Delete the post that has been selected
+	            	$postID = $_GET['deletePID'];
+	            	$deleteQuery = "DELETE FROM posts WHERE post_id = $postID";
+	            	$deleteResult = mysqli_query($connect, $deleteQuery);
+	            	
+	            	if (mysqli_affected_rows($connect)) {
+	            		echo "<h2>Your blogpost has been successfully removed!</h2>";
+            			echo "Click <a href=\"index.php?page=editposts\">here</a> to go back to all your blogposts.";
+	            	}
+	            	
+				} else {
+	            ?>
+	                <h2>Welcome to Bloggers</h2>
+	                <p>
+	                    Bloggers is a website where everyone can register and create blogposts.
+	                    It is a realy basic and easy to use website where people can write everything they want.
+	                </p>
+	                <p>
+	                    All you have to do is register an account by clicking on "Register" on the right side of the menu. Once you have registered your account you can login and start posting whatever comes to your mind or manage your earlier blogposts.
+	                    On the left side you can see all the bloggers that are creating content on Blogger including you! When you click on any of them, their blogposts will show up in this space replacing the text you are currently reading.
+	                </p>
+	            <?php 
+	            }
+	            ?>
             </div>
         </div>
 <?php 

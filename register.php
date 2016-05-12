@@ -44,7 +44,7 @@ if (isset($_POST['submit']) && $_POST['submit'] == 'Submit') {
 	
 	if (empty($error['email'])) {
 		//Validate email
-		if (test_email($stripTrim['email']) == "invalid") {
+		if (test_email($stripTrim['email'])== false) {
 			$error['email']= $errortype['invalid']['email'];
 		} else {
 			//Check if e-mail exist
@@ -106,7 +106,7 @@ Thank you for your registration and have fun blogging!\r\n",
 "Van: info@bloggers.nl"));
 			
 			if ($confirmation) {
-				$message = "Uw account is met success aangemaakt!";
+				$message = "Your account has been succesfully created!";
 				unset($_POST);
 			}
 		}

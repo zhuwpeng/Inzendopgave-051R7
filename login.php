@@ -14,10 +14,10 @@ if (isset($_POST['submit']) && $_POST['submit'] == 'Login') {
 	
 	//Validate input
 	if (empty($email)) {
-		$usernameError = "Fill in your username!";
+		$usernameError = "Fill in your e-mail!";
 		$error = true;
 	} else {
-		if(test_email($email) == "invalid") {
+		if(test_email($email) == false) {
 			$emailError = "Invalid e-mail entered";
 			$error = true;
 		}

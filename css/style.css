@@ -104,6 +104,23 @@ body {
     overflow: auto;
 }
 
+.post-wrapper {
+	padding-bottom:20px;
+}
+
+.post-content {
+	border-bottom:1px solid #d3d3d3;
+}
+
+.post-content h3{
+	margin-bottom: 0;
+}
+
+.namedate {
+	margin: 0;
+	font-size: 0.8em;
+}
+
 /*----------- Side content ------------*/
 .side-wrapper {
     width: 25%;

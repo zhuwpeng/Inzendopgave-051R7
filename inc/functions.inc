@@ -6,7 +6,7 @@ function get_navbar() {
 					<ul class=\"nav\">
   					<li><a href=\"index.php\">Home</a></li>
   					<li><a href=\"post.php\">Create Post</a></li>
- 					<li><a href=\"?page=editposts\">Edit Posts</a></li>
+ 					<li><a href=\"index.php?page=editposts\">Edit Posts</a></li>
   					<li class=\"nav-login\"><a href=\"logout.php\">Logout</a></li>
   					</ul>
 				</div>";
@@ -21,6 +21,11 @@ function get_navbar() {
 	}
 }
 
+/**
+ * @desc: Validates userinput e-mail
+ * @param: e-mail $email
+ * @return: string
+ */
 function test_email($email)
 {
 	$match_pattern = '/^[a-zA-Z]*[a-zA-Z]*@[a-zA-Z]*[a-zA-Z]*.nl$/';
@@ -33,14 +38,16 @@ function test_email($email)
 		$domain =$explode_result_domain[0];
 
 		if (strlen($name) < 2 || strlen($domain) < 2) {
-			return "invalid";
+			return false;
+		} else {
+			return true;
 		}
 	} else {
-		return "invalid";
+		return false;
 	}
 }
 
-//Eigen error handler
+//Own error handler
 function error_msg($err_type, $err_msg, $err_file, $err_line){
 	echo "<div class = 'errorMsg'>";
 	echo "<p><b>Error:</b> Oops something went wrong! Please try again later or send an e-mail to admin@admin.nl <br />";
@@ -49,15 +56,20 @@ function error_msg($err_type, $err_msg, $err_file, $err_line){
 
 }
 
-//Retrieve bloggers
+
+/**
+ * @desc: Retrieves all the bloggers that are registered
+ * @param: dbconnection $connect
+ * @return: string
+ */
 function get_bloggers($connect) {
-	$query = "SELECT name, ln_prefix, surname FROM users WHERE name != 'Admin'";
+	$query = "SELECT user_id, name, ln_prefix, surname FROM users WHERE name != 'Admin'";
 	$queryResult = mysqli_query($connect, $query);
 	$numRows = mysqli_num_rows($queryResult);
 
 	if($numRows > 0) {
 		while($bloggers = mysqli_fetch_assoc($queryResult)){
-			echo "<li><a href=?name=". $bloggers['name'] . ">". $bloggers['name'] . " " . stripslashes($bloggers['ln_prefix']) . " " . $bloggers['surname'] ."</a></li>";
+			echo "<li><a href=?id=". $bloggers['user_id'] . ">". $bloggers['name'] . " " . stripslashes($bloggers['ln_prefix']) . " " . $bloggers['surname'] ."</a></li>";
 		}
 	} else {
 		echo "No bloggers registered";
@@ -94,4 +106,105 @@ function random_password() {
 	$randomPassword .= random_string($smallSet.$capitalSet.$specialSet.$numbersSet, 4);
 
 	return str_shuffle($randomPassword);
+}
+
+/**
+ * @desc: Retrieves blogposts or only the titles for editing or deleting blogposts
+ * @param: name $name, dbconnection $connect, bool $postTitle
+ * @return: blogposts or titles string
+ */
+function get_blogposts($id, $connect, $postTitle) {
+	$bloggerID = $id;
+	//Retrieve posts made by the blogger and blogger data
+	$bloggerdataQuery = "SELECT name, ln_prefix, surname FROM users WHERE user_id ='$bloggerID'";
+	$bloggerdataResult = mysqli_query($connect, $bloggerdataQuery) or die("Could not retrieve information. " . mysqli_error($connect));
+	 
+	if (mysqli_num_rows($bloggerdataResult) == 1) {
+		$bloggerData = mysqli_fetch_assoc($bloggerdataResult);
+		$bloggerName = $bloggerData['name'];
+		$bloggerPref = $bloggerData['ln_prefix'];
+		$bloggerSur = $bloggerData['surname'];
+	}
+	
+	//Retrieve blogposts
+	$blogpostQuery = "SELECT post_id, post_author, post_title, post_content, post_date, post_edited FROM posts WHERE post_author ='$bloggerID' ORDER BY post_date DESC";
+	$blogpostResult = mysqli_query($connect, $blogpostQuery) or die("Could not retrieve information. " . mysqli_error($connect));
+	 
+	if (mysqli_num_rows($blogpostResult) > 0) {
+		while ($blogpost = mysqli_fetch_assoc($blogpostResult)){
+			$postID = $blogpost['post_id'];
+			$title = $blogpost['post_title'];
+			$content = nl2br($blogpost['post_content']);
+			$postDate = $blogpost['post_date'];
+			
+			if(!empty($blogpost['post_edited'])){
+				$edited = "Last edited on ";
+			} else {
+				$edited = "Date of creation ";
+			}
+			
+			if (!$postTitle) {
+				echo "<div class=\"post-wrapper\">
+				<div class=\"post-content\">
+				<h3>$title</h3>
+				<p class=\"namedate\"><b>$bloggerName $bloggerPref $bloggerSur</b> | $edited$postDate<p>
+				</div>
+				<div style=' border-bottom: 1px solid black; padding:20px; '>
+				$content
+				</div>
+				</div>";
+			} else {
+				echo "<tr>
+						<td>$title</td>
+						<td>postDate</td>
+						<td><a href=\"post.php?editPID=$postID\">Edit</a></td>
+						<td><a href=\"?deletePID=$postID\">Remove</a></td>
+					</tr>";
+			}
+		}
+	} else {
+		echo "<h2>This user hasn't posted anything yet!</h2>";
+	}
+}
+
+/**
+ * @desc: Creates a blogpost and saves it into the database or updates a blogpost
+ * @param: dbconnection $connect, blogpost id $postID, authorID $authorID, blog title $title, content $content, bool $edited
+ * @return: string
+ */
+function create_post($connect, $postID, $authorID, $title, $content, $edited) {
+	$author = $authorID;
+	$postTitle = mysqli_real_escape_string($connect, $title);
+	$postContent = mysqli_real_escape_string($connect, $content);
+	$date = date('Y-m-d H:i:s');
+	
+	if (!$edited) {
+		$insertQuery = "INSERT INTO posts (post_id,
+											post_author,
+											post_title,
+											post_content,
+											post_date)
+											VALUES ($postID,
+											'$author',
+											'$postTitle',
+											'$postContent',
+											'$date')";
+		
+		$insertResult = mysqli_query($connect, $insertQuery);
+	} else {
+		$insertQuery = "UPDATE posts SET post_title = '$postTitle',
+											post_content = '$postContent',
+											post_date = '$date',
+											post_edited = '$edited'
+									WHERE post_id = '$postID'";
+		
+		$insertResult = mysqli_query($connect, $insertQuery);
+		
+	}
+	
+	if (mysqli_affected_rows($connect) == 1 && !$edited) {
+		return "Your blogpost has been created!";
+	} else {
+		return "Your blogpost has been edited!";
+	}
 }
