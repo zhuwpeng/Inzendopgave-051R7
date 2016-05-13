@@ -51,26 +51,42 @@ if (isset($_GET['editPID']) && isset($_SESSION['user_id'])) {
 }
 ?>
 <div class="wrapper">
-<span class="message"><?php echo $message;?></span>
-<span class=error><?php echo $errorMsg;?></span>
-	<?php if (isset($_SESSION['user_id'])) {?>
-	<div class="form post">
-		<h2>Your blogpost</h2>
-		<form method="POST" action="post.php">	
-			<span class = error><?php if(isset($error['title'])) { echo $error['title'];}?></span>
-			<label for="form-title">Title:</label>
-			<input type="text" id="form-title" name="title" value="<?php if(isset($_POST['title'])){echo htmlentities($_POST['title']);}elseif(isset($_GET['editPID'])){echo $postTitle;} else{ echo "";}?>">
-			
-			<span class = error><?php if(isset($error['blogpost'])){echo $error['blogpost'];}?></span>
-			<label for="form-blogpost">Blog post:</label>
-			<textarea rows="10" cols="50" name="blogpost"><?php if(isset($_POST['blogpost'])){ echo htmlentities($_POST['blogpost']);}elseif(isset($_GET['editPID'])){ echo $postContent; }else{ echo "";}?></textarea>
-			
-			<input class="btn" type="submit" name="submit" <?php if (!isset($_GET['editPID'])){ echo "value=\"Create post\"";}else{echo "value=\"Edit post\"";}?>>
-		</form>
+	<span class="message"><?php echo $message;?></span>
+	<span class=error><?php echo $errorMsg;?></span>
+	<div class="side-wrapper">
+		<div class="small-wrapper">
+			<div class="panel-head">
+				<h3>Bloggers</h3>
+			</div>
+			<div class="bloggers side-content">
+				<ul>
+				<?php
+					get_bloggers($connect);
+				?>
+				</ul>
+			</div>
+		</div>
 	</div>
-	<?php } else {?>
-	<span class="message">You have to be logged in in order to create a post!</span>
+	<div class="main-content">
+	<?php if (isset($_SESSION['user_id'])) {?>
+		<div class="form post">
+			<h2>Your blogpost</h2>
+			<form method="POST" action="post.php">	
+				<span class = error><?php if(isset($error['title'])) { echo $error['title'];}?></span>
+				<label for="form-title">Title:</label>
+				<input type="text" id="form-title" name="title" value="<?php if(isset($_POST['title'])){echo htmlentities($_POST['title']);}elseif(isset($_GET['editPID'])){echo $postTitle;} else{ echo "";}?>">
+				
+				<span class = error><?php if(isset($error['blogpost'])){echo $error['blogpost'];}?></span>
+				<label for="form-blogpost">Blog post:</label>
+				<textarea rows="10" cols="50" name="blogpost"><?php if(isset($_POST['blogpost'])){ echo htmlentities($_POST['blogpost']);}elseif(isset($_GET['editPID'])){ echo $postContent; }else{ echo "";}?></textarea>
+				
+				<input class="btn" type="submit" name="submit" <?php if (!isset($_GET['editPID'])){ echo "value=\"Create post\"";}else{echo "value=\"Edit post\"";}?>>
+			</form>
+		</div>
+		<?php } else {?>
+		<span class="message">You have to be logged in in order to create a post!</span>
 	<?php }?>
+	</div>
 </div>
 <?php 
 include_once 'inc/footer.inc';

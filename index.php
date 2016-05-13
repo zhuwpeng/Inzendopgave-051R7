@@ -38,13 +38,11 @@ include_once 'inc/header.inc';
 	                    <h3>Bloggers</h3>
 	                </div>
 	                <div class="bloggers side-content">
-	                
 	                    <ul>
 	                    <?php
 	                    	get_bloggers($connect);
 	                    ?>
 	                    </ul>
-	                
 	                </div>
                 </div>
             </div>

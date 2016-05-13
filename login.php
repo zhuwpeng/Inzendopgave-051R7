@@ -17,7 +17,7 @@ if (isset($_POST['submit']) && $_POST['submit'] == 'Login') {
 		$usernameError = "Fill in your e-mail!";
 		$error = true;
 	} else {
-		if(test_email($email) == false) {
+		if(test_email($email, $_POST['submit']) == false) {
 			$emailError = "Invalid e-mail entered";
 			$error = true;
 		}
@@ -56,19 +56,35 @@ if (isset($_POST['submit']) && $_POST['submit'] == 'Login') {
 <div class="wrapper">
 <span class="message"><?php echo $message;?></span>
 <span class=error><?php echo $errorMsg;?></span>
-	<div class="form login">
-		<h2>Login</h2>
-		<form method="POST" action="login.php">	
-			<span class = error><?php echo $emailError;?></span>
-			<label for="form-username">E-mail:</label>
-			<input type="text" id="form-username" name="email" value="<?php if(isset($_POST['email'])){echo htmlentities($_POST['email']);}else{ echo "";}?>">
-			
-			<span class = error><?php echo $passwordError;?></span>
-			<label for="form-password">Password:</label>
-			<input type="password" id="form-password" name="password" value="<?php if(isset($_POST['password'])){ echo htmlentities($_POST['password']);}else{ echo "";}?>">
-			
-			<input class="btn" type="submit" name="submit" value="Login">
-		</form>
+	<div class="side-wrapper">
+		<div class="small-wrapper">
+			<div class="panel-head">
+				<h3>Bloggers</h3>
+			</div>
+			<div class="bloggers side-content">
+				<ul>
+				<?php
+					get_bloggers($connect);
+				?>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<div class="main-content">
+		<div class="form login">
+			<h2>Login</h2>
+			<form method="POST" action="login.php">	
+				<span class = error><?php echo $emailError;?></span>
+				<label for="form-username">E-mail:</label>
+				<input type="text" id="form-username" name="email" value="<?php if(isset($_POST['email'])){echo htmlentities($_POST['email']);}else{ echo "";}?>">
+				
+				<span class = error><?php echo $passwordError;?></span>
+				<label for="form-password">Password:</label>
+				<input type="password" id="form-password" name="password" value="<?php if(isset($_POST['password'])){ echo htmlentities($_POST['password']);}else{ echo "";}?>">
+				
+				<input class="btn" type="submit" name="submit" value="Login">
+			</form>
+		</div>
 	</div>
 </div>
 <?php 

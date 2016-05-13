@@ -26,7 +26,7 @@ function get_navbar() {
  * @param: e-mail $email
  * @return: string
  */
-function test_email($email)
+function test_email($email, $logreg)
 {
 	$match_pattern = '/^[a-zA-Z]*[a-zA-Z]*@[a-zA-Z]*[a-zA-Z]*.nl$/';
 	$match = preg_match($match_pattern, $email);
@@ -36,11 +36,19 @@ function test_email($email)
 		$explode_result_domain = explode(".", $explode_result[1]);
 		$name = $explode_result[0];
 		$domain =$explode_result_domain[0];
-
+	
 		if (strlen($name) < 2 || strlen($domain) < 2) {
 			return false;
 		} else {
-			return true;
+			if($logreg == "Register"){
+				if (preg_match('/admin/i', $email)) {
+					return false;
+				} else {
+					return true;
+				}
+			} else {
+				return true;
+			}
 		}
 	} else {
 		return false;
@@ -50,7 +58,7 @@ function test_email($email)
 //Own error handler
 function error_msg($err_type, $err_msg, $err_file, $err_line){
 	echo "<div class = 'errorMsg'>";
-	echo "<p><b>Error:</b> Oops something went wrong! Please try again later or send an e-mail to admin@admin.nl <br />";
+	echo "<p><b>Error:</b> Oops something went wrong! Please try again later or send an e-mail to admin@admin.nl and report the issue.<br />";
 	echo "Error type: $err_type: $err_msg in $err_file at line $err_line";
 	echo "</div>";
 
@@ -116,7 +124,7 @@ function random_password() {
 function get_blogposts($id, $connect, $postTitle) {
 	$bloggerID = $id;
 	//Retrieve posts made by the blogger and blogger data
-	$bloggerdataQuery = "SELECT name, ln_prefix, surname FROM users WHERE user_id ='$bloggerID'";
+	$bloggerdataQuery = "SELECT name, ln_prefix, surname, email FROM users WHERE user_id ='$bloggerID'";
 	$bloggerdataResult = mysqli_query($connect, $bloggerdataQuery) or die("Could not retrieve information. " . mysqli_error($connect));
 	 
 	if (mysqli_num_rows($bloggerdataResult) == 1) {
@@ -124,10 +132,15 @@ function get_blogposts($id, $connect, $postTitle) {
 		$bloggerName = $bloggerData['name'];
 		$bloggerPref = $bloggerData['ln_prefix'];
 		$bloggerSur = $bloggerData['surname'];
+		$bloggerEmail = $bloggerData['email'];
 	}
 	
 	//Retrieve blogposts
-	$blogpostQuery = "SELECT post_id, post_author, post_title, post_content, post_date, post_edited FROM posts WHERE post_author ='$bloggerID' ORDER BY post_date DESC";
+	if ($bloggerEmail == "admin@admin.nl") {
+		$blogpostQuery = "SELECT post_id, post_author, post_title, post_content, post_date, post_edited FROM posts ORDER BY post_date DESC";
+	} else {
+		$blogpostQuery = "SELECT post_id, post_author, post_title, post_content, post_date, post_edited FROM posts WHERE post_author ='$bloggerID' ORDER BY post_date DESC";
+	}
 	$blogpostResult = mysqli_query($connect, $blogpostQuery) or die("Could not retrieve information. " . mysqli_error($connect));
 	 
 	if (mysqli_num_rows($blogpostResult) > 0) {
@@ -156,7 +169,7 @@ function get_blogposts($id, $connect, $postTitle) {
 			} else {
 				echo "<tr>
 						<td>$title</td>
-						<td>postDate</td>
+						<td>$postDate</td>
 						<td><a href=\"post.php?editPID=$postID\">Edit</a></td>
 						<td><a href=\"?deletePID=$postID\">Remove</a></td>
 					</tr>";
