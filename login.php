@@ -2,7 +2,6 @@
 include_once 'inc/header.inc';
 
 $message = "";
-$errorMsg = "";
 $emailError = "";
 $passwordError = "";
 $error = false;
@@ -33,7 +32,7 @@ if (isset($_POST['submit']) && $_POST['submit'] == 'Login') {
 		//Check if user exist in database
 		$email = mysqli_real_escape_string($connect, $email);
 		$userQuery = "SELECT user_id, email, password FROM users WHERE email = '$email';";
-		$userResult = mysqli_query($connect, $userQuery) or die("Er is iets fout gegaan tijdens het ophalen van gegevens: " . mysqli_error($connect)) . ".";
+		$userResult = mysqli_query($connect, $userQuery) or die("Could not retrieve data from the database. " . mysqli_error($connect)) . ".";
 		$userRows = mysqli_num_rows($userResult);
 		
 		//Check if only one user exist
@@ -54,8 +53,6 @@ if (isset($_POST['submit']) && $_POST['submit'] == 'Login') {
 }
 ?>
 <div class="wrapper">
-<span class="message"><?php echo $message;?></span>
-<span class=error><?php echo $errorMsg;?></span>
 	<div class="side-wrapper">
 		<div class="small-wrapper">
 			<div class="panel-head">
@@ -71,6 +68,7 @@ if (isset($_POST['submit']) && $_POST['submit'] == 'Login') {
 		</div>
 	</div>
 	<div class="main-content">
+		<span class="message"><?php echo $message;?></span>
 		<div class="form login">
 			<h2>Login</h2>
 			<form method="POST" action="login.php">	

@@ -72,7 +72,7 @@ function error_msg($err_type, $err_msg, $err_file, $err_line){
  */
 function get_bloggers($connect) {
 	$query = "SELECT user_id, name, ln_prefix, surname FROM users WHERE name != 'Admin'";
-	$queryResult = mysqli_query($connect, $query);
+	$queryResult = mysqli_query($connect, $query) or die("Could not retrieve data from database. " . mysqli_query($connect));
 	$numRows = mysqli_num_rows($queryResult);
 
 	if($numRows > 0) {
@@ -141,7 +141,7 @@ function get_blogposts($id, $connect, $postTitle) {
 	} else {
 		$blogpostQuery = "SELECT post_id, post_author, post_title, post_content, post_date, post_edited FROM posts WHERE post_author ='$bloggerID' ORDER BY post_date DESC";
 	}
-	$blogpostResult = mysqli_query($connect, $blogpostQuery) or die("Could not retrieve information. " . mysqli_error($connect));
+	$blogpostResult = mysqli_query($connect, $blogpostQuery) or die("Could not retrieve data. " . mysqli_error($connect));
 	 
 	if (mysqli_num_rows($blogpostResult) > 0) {
 		while ($blogpost = mysqli_fetch_assoc($blogpostResult)){
@@ -159,11 +159,11 @@ function get_blogposts($id, $connect, $postTitle) {
 			if (!$postTitle) {
 				echo "<div class=\"post-wrapper\">
 				<div class=\"post-content\">
-				<h3>$title</h3>
-				<p class=\"namedate\"><b>$bloggerName $bloggerPref $bloggerSur</b> | $edited$postDate<p>
+					<h3>$title</h3>
+					<p class=\"namedate\"><b>$bloggerName $bloggerPref $bloggerSur</b> | $edited$postDate<p>
 				</div>
-				<div style=' border-bottom: 1px solid black; padding:20px; '>
-				$content
+				<div class=\"post-body\">
+					$content
 				</div>
 				</div>";
 			} else {
@@ -202,8 +202,6 @@ function create_post($connect, $postID, $authorID, $title, $content, $edited) {
 											'$postTitle',
 											'$postContent',
 											'$date')";
-		
-		$insertResult = mysqli_query($connect, $insertQuery);
 	} else {
 		$insertQuery = "UPDATE posts SET post_title = '$postTitle',
 											post_content = '$postContent',
@@ -211,9 +209,9 @@ function create_post($connect, $postID, $authorID, $title, $content, $edited) {
 											post_edited = '$edited'
 									WHERE post_id = '$postID'";
 		
-		$insertResult = mysqli_query($connect, $insertQuery);
-		
 	}
+	
+	$insertResult = mysqli_query($connect, $insertQuery) or die("Could not insert data into the database. " . mysqli_error($connect));
 	
 	if (mysqli_affected_rows($connect) == 1 && !$edited) {
 		return "Your blogpost has been created!";

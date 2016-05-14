@@ -2,7 +2,6 @@
 include_once 'inc/header.inc';
 
 $message = "";
-$errorMsg = "";
 $nameError = "";
 $lnPrefixError = "";
 $surnameError = "";
@@ -49,7 +48,7 @@ if (isset($_POST['submit']) && $_POST['submit'] == 'Register') {
 		} else {
 			//Check if e-mail exist
 			$emailQuery = "SELECT email FROM users WHERE email='" . $stripTrim['email'] . "'";
-			$emailResult = mysqli_query($connect, $emailQuery);
+			$emailResult = mysqli_query($connect, $emailQuery) or die("Could not retrieve data from the database. " . mysqli_error($connect));
 
 			if (mysqli_num_rows($emailResult)!=0) {
 				$error['email'] = $errortype['invalid']['emailexist'];
@@ -90,7 +89,7 @@ if (isset($_POST['submit']) && $_POST['submit'] == 'Register') {
 											'$passencrypt',
 											'member',
 											'$reg_date')";
-		$resultQuery = mysqli_query($connect, $inputQuery);
+		$resultQuery = mysqli_query($connect, $inputQuery) or die("Could insert data into the database. " . mysqli_error($connect));
 		
 		if (mysqli_affected_rows($connect) == 1) {
 			$confirmation = (mail($email, "Registratie",
@@ -118,8 +117,6 @@ if(isset($_POST['reset']) && $_POST['reset'] == "Reset"){
 
 ?>
 <div class="wrapper">
-<span class="message"><?php echo $message;?></span>
-<span class=error><?php echo $errorMsg;?></span>
 	<div class="side-wrapper">
 		<div class="small-wrapper">
 			<div class="panel-head">
@@ -135,6 +132,7 @@ if(isset($_POST['reset']) && $_POST['reset'] == "Reset"){
 		</div>
 	</div>
 	<div class="main-content">
+		<span class="message"><?php echo $message;?></span>
 		<div class="form register">
 			<h2>Register</h2>
 			<form method="POST" action="register.php">	

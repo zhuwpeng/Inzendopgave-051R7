@@ -53,11 +53,11 @@ include_once 'inc/header.inc';
 	            	//Retrieve all the blogposts from any blogger in the list
 	            	get_blogposts($_GET['id'], $connect, false);
 	            } elseif (isset($_GET['page']) && $_GET['page']=="editposts" && isset($_SESSION['user_id'])) {?>
-	            	<h2>Edit or remove your blogposts</h2>
-	            	<table border= 1>
+	            	<h2>Edit or remove blogposts</h2>
+	            	<table class="table">
 		            	<tr>
 			            	<th>Title</th>
-			            	<th>Date</th>
+			            	<th>Date and time</th>
 			            	<th></th>
 			            	<th></th>
 			            </tr>
@@ -71,10 +71,10 @@ include_once 'inc/header.inc';
 	            	//Delete the post that has been selected
 	            	$postID = $_GET['deletePID'];
 	            	$deleteQuery = "DELETE FROM posts WHERE post_id = $postID";
-	            	$deleteResult = mysqli_query($connect, $deleteQuery);
+	            	$deleteResult = mysqli_query($connect, $deleteQuery) or die("could not connect to the database." . mysqli_error($connect));
 	            	
 	            	if (mysqli_affected_rows($connect)) {
-	            		echo "<h2>Your blogpost has been successfully removed!</h2>";
+	            		echo "<h2>The blogpost has been successfully removed!</h2>";
             			echo "Click <a href=\"index.php?page=editposts\">here</a> to go back to all your blogposts.";
 	            	}
 	            	

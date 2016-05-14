@@ -23,7 +23,7 @@ set_error_handler('error_msg');
     <div id="container">
         <div class="header">
             <div class="logo">
-                <h1>The header</h1>
+            	<a href="index.php" ><img alt="logo" src="img/blogger_logo.png"></a>
             </div>
 		<?php get_navbar();?>
 		</div>

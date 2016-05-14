@@ -1,5 +1,5 @@
 		<div class="footer">
-            <h2>This is the footer</h2>
+            <p>&copy 2016. All Rights Reserved.</p>
         </div>
     </div>
 </body>

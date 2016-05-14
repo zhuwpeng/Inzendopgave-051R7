@@ -2,7 +2,6 @@
 include_once 'inc/header.inc';
 
 $message = "";
-$errorMsg = "";
 $titleError ="";
 $blogpostError = "";
 
@@ -41,7 +40,7 @@ if (isset($_GET['editPID']) && isset($_SESSION['user_id'])) {
 	$postID = $_SESSION['postID'] = $_GET['editPID'];
 	//Retrieve post title and content
 	$retrieveQuery = "SELECT * FROM posts WHERE post_id = $postID";
-	$retrieveResult = mysqli_query($connect, $retrieveQuery);
+	$retrieveResult = mysqli_query($connect, $retrieveQuery) or die("Could not access the database " . mysqli_error($connect));
 	
 	if (mysqli_num_rows($retrieveResult) == 1) {
 		$retrieveData = mysqli_fetch_assoc($retrieveResult);
@@ -51,8 +50,6 @@ if (isset($_GET['editPID']) && isset($_SESSION['user_id'])) {
 }
 ?>
 <div class="wrapper">
-	<span class="message"><?php echo $message;?></span>
-	<span class=error><?php echo $errorMsg;?></span>
 	<div class="side-wrapper">
 		<div class="small-wrapper">
 			<div class="panel-head">
@@ -69,6 +66,7 @@ if (isset($_GET['editPID']) && isset($_SESSION['user_id'])) {
 	</div>
 	<div class="main-content">
 	<?php if (isset($_SESSION['user_id'])) {?>
+		<span class="message"><?php echo $message;?></span>
 		<div class="form post">
 			<h2>Your blogpost</h2>
 			<form method="POST" action="post.php">	
@@ -78,7 +76,7 @@ if (isset($_GET['editPID']) && isset($_SESSION['user_id'])) {
 				
 				<span class = error><?php if(isset($error['blogpost'])){echo $error['blogpost'];}?></span>
 				<label for="form-blogpost">Blog post:</label>
-				<textarea rows="10" cols="50" name="blogpost"><?php if(isset($_POST['blogpost'])){ echo htmlentities($_POST['blogpost']);}elseif(isset($_GET['editPID'])){ echo $postContent; }else{ echo "";}?></textarea>
+				<textarea rows="15" cols="50" name="blogpost"><?php if(isset($_POST['blogpost'])){ echo htmlentities($_POST['blogpost']);}elseif(isset($_GET['editPID'])){ echo $postContent; }else{ echo "";}?></textarea>
 				
 				<input class="btn" type="submit" name="submit" <?php if (!isset($_GET['editPID'])){ echo "value=\"Create post\"";}else{echo "value=\"Edit post\"";}?>>
 			</form>

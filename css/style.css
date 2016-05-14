@@ -1,7 +1,7 @@
 body {
     font-family: sans-serif;
-    margin: 0;
     padding: 0;
+    background: #dddddd;
 }
 
 
@@ -9,7 +9,8 @@ body {
 
 #container {
     background-color: white;
-    margin: 0 auto;
+    margin-left:auto;
+    margin-right: auto;
     padding: 0;
     max-width: 960px;
     min-width: 480px;
@@ -19,14 +20,18 @@ body {
 /*----------- Header ------------------*/
 
 .header {
-    background-color: aqua;
+    background-color: white;
+    outline: solid 1px #3385ff;
 }
 
-.header .logo h1 {
-    margin: 0;
-    padding-top: 20px;
-    padding: 2%;
+#container .header .logo a img{
+    width: 15%;
+    margin: 0 auto;
+    display: block;
+    padding-top: 35px;
+    padding-bottom: 35px;
 }
+
 
 .header .navbar-wrap {
     background-color: #3385ff;
@@ -88,11 +93,12 @@ body {
     border-right: solid 1px #3385ff;
     overflow: hidden;
     margin: 0 auto;
+    min-height: 350px;
 }
 
 /*----------- Main content ------------*/
 .main-content {
-    background-color: aquamarine;
+    background-color: white;
     width: 68%;
     margin: 1% 1% 1% 0;
     padding: 2%;
@@ -116,6 +122,11 @@ body {
 	margin-bottom: 0;
 }
 
+.post-body {
+    border-bottom: 1px solid #d3d3d3;
+    padding:20px;
+}
+
 .namedate {
 	margin: 0;
 	font-size: 0.8em;
@@ -131,6 +142,7 @@ body {
     margin: 0;
     padding: 10px 0 10px 2%;
     background-color: #3385ff;
+    color: white;
 }
 
 .user,
@@ -158,6 +170,13 @@ body {
     padding: 2%;
     background-color: #3385ff;
     clear: both;
+    min-height: 75px;
+}
+
+.footer p {
+    font-size: 0.8em;
+    color: white;
+    text-align: center;
 }
 
 /*---------- Register Form -----------*/
@@ -168,7 +187,7 @@ body {
 	background: #eee;
 	border: solid 1px #acacac;
 	margin: 1% auto;
-	width: 30%;
+	width: 40%;
 	min-width: 225px;
 }
 
@@ -215,11 +234,15 @@ span{
 /*---------- Post Form -----------*/
 
 .post {
-	width: 45%;
+	width: 96%;
 }
 
 textarea {
 	width: 96%;
+}
+
+.form .btn {
+    margin-top: 20px;
 }
 
 /*---------- Messages -----------*/
@@ -258,3 +281,25 @@ textarea {
 	text-decoration: none;
     color: white;
 }
+
+/*---------- Table ------------*/
+
+.table {
+    width: 98%;
+    border-collapse: collapse;
+}
+
+th, td {
+    border-bottom: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background: #3385ff;
+}
+
+tr:hover {
+    background-color:#f5f5f5
+}
+
