@@ -110,6 +110,10 @@ body {
     overflow: auto;
 }
 
+.main-content h2 {
+    margin-top: 0;
+}
+
 .post-wrapper {
 	padding-bottom:20px;
 }
@@ -233,12 +237,14 @@ span{
 
 /*---------- Post Form -----------*/
 
-.post {
+.post,
+textarea {
 	width: 96%;
 }
 
 textarea {
-	width: 96%;
+	resize: vertical;
+	height: auto;
 }
 
 .form .btn {

@@ -104,7 +104,7 @@ Thank you for your registration and have fun blogging!\r\n",
 "Van: info@bloggers.nl"));
 			
 			if ($confirmation) {
-				$message = "Your account has been succesfully created!";
+				$message = "Your account has been succesfully created! Your password will be sent to your mailbox shortly!";
 				unset($_POST);
 			}
 		}
@@ -137,16 +137,16 @@ if(isset($_POST['reset']) && $_POST['reset'] == "Reset"){
 			<h2>Register</h2>
 			<form method="POST" action="register.php">	
 				<span class="error"><?php if(isset($error['name'])) {echo $error['name'];}?></span>
-				<label for="form-name">Name:</label>
+				<label for="form-name">First name:</label>
 				<input type="text" id="form-name" name="name" value="<?php if(isset($_POST['name'])){echo htmlentities($_POST['name']);}else{ echo "";}?>">
+				
+				<span class="error"><?php if(isset($error['surname'])) {echo $error['surname'];}?></span>
+				<label for="form-surname">Last name:</label>
+				<input type="text" id="form-surname" name="surname" value="<?php if(isset($_POST['surname'])){echo htmlentities($_POST['surname']);}else{ echo "";}?>">
 				
 				<label for="form-lnprefix">Last name prefix:</label>
 				<input type="text" id="form-lnprefix" name="ln_prefix" value="<?php if(isset($_POST['ln_prefix'])){echo htmlentities($_POST['ln_prefix']);}else{ echo "";}?>">
-	
-				<span class="error"><?php if(isset($error['surname'])) {echo $error['surname'];}?></span>
-				<label for="form-surname">Surname:</label>
-				<input type="text" id="form-surname" name="surname" value="<?php if(isset($_POST['surname'])){echo htmlentities($_POST['surname']);}else{ echo "";}?>">
-	
+				
 				<span class="error"><?php if(isset($error['email'])) {echo $error['email'];}?></span>
 				<label for="form-email">E-mail:</label>
 				<input type="text" id="form-email" name="email" value="<?php if(isset($_POST['email'])){echo htmlentities($_POST['email']);}else{ echo "";}?>">

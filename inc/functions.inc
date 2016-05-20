@@ -71,13 +71,13 @@ function error_msg($err_type, $err_msg, $err_file, $err_line){
  * @return: string
  */
 function get_bloggers($connect) {
-	$query = "SELECT user_id, name, ln_prefix, surname FROM users WHERE name != 'Admin'";
+	$query = "SELECT user_id, name, ln_prefix, surname FROM users WHERE usertype != 'Admin'";
 	$queryResult = mysqli_query($connect, $query) or die("Could not retrieve data from database. " . mysqli_query($connect));
 	$numRows = mysqli_num_rows($queryResult);
 
 	if($numRows > 0) {
 		while($bloggers = mysqli_fetch_assoc($queryResult)){
-			echo "<li><a href=?id=". $bloggers['user_id'] . ">". $bloggers['name'] . " " . stripslashes($bloggers['ln_prefix']) . " " . $bloggers['surname'] ."</a></li>";
+			echo "<li><a href=index.php?id=". $bloggers['user_id'] . ">". $bloggers['name'] . " " . stripslashes($bloggers['ln_prefix']) . " " . $bloggers['surname'] ."</a></li>";
 		}
 	} else {
 		echo "No bloggers registered";
@@ -141,6 +141,7 @@ function get_blogposts($id, $connect, $postTitle) {
 	} else {
 		$blogpostQuery = "SELECT post_id, post_author, post_title, post_content, post_date, post_edited FROM posts WHERE post_author ='$bloggerID' ORDER BY post_date DESC";
 	}
+	
 	$blogpostResult = mysqli_query($connect, $blogpostQuery) or die("Could not retrieve data. " . mysqli_error($connect));
 	 
 	if (mysqli_num_rows($blogpostResult) > 0) {
@@ -176,7 +177,7 @@ function get_blogposts($id, $connect, $postTitle) {
 			}
 		}
 	} else {
-		echo "<h2>This user hasn't posted anything yet!</h2>";
+		echo "<h2>No blog post created yet!</h2>";
 	}
 }
 
@@ -189,26 +190,27 @@ function create_post($connect, $postID, $authorID, $title, $content, $edited) {
 	$author = $authorID;
 	$postTitle = mysqli_real_escape_string($connect, $title);
 	$postContent = mysqli_real_escape_string($connect, $content);
-	$date = date('Y-m-d H:i:s');
+	$date = mysqli_real_escape_string($connect, date('Y-m-d H:i:s'));
 	
 	if (!$edited) {
 		$insertQuery = "INSERT INTO posts (post_id,
 											post_author,
 											post_title,
 											post_content,
-											post_date)
-											VALUES ($postID,
+											post_date,
+											post_edited) 
+									VALUES ('$postID',
 											'$author',
 											'$postTitle',
 											'$postContent',
-											'$date')";
+											'$date',
+											'0')";
 	} else {
 		$insertQuery = "UPDATE posts SET post_title = '$postTitle',
 											post_content = '$postContent',
 											post_date = '$date',
-											post_edited = '$edited'
+											post_edited = '1'
 									WHERE post_id = '$postID'";
-		
 	}
 	
 	$insertResult = mysqli_query($connect, $insertQuery) or die("Could not insert data into the database. " . mysqli_error($connect));

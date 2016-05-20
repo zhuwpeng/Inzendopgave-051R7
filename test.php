@@ -57,6 +57,8 @@ if($match){
 	echo "$name <br />";
 	echo "$domain <br />";
 }
+
+echo date('Y-m-d H:i:s');
 ?>
 
 <!DOCTYPE HTML>

@@ -29,9 +29,11 @@ if (isset($_POST['submit'])) {
 	
 	if (empty($error)) {
 		if ($_POST['submit'] == 'Create post'){
-			$message = create_post($connect, NULL, $_SESSION['user_id'], $stripTrim['title'], $stripTrim['blogpost'], false);
+			$message = create_post($connect, NULL, $_SESSION['user_id'], $stripTrim['title'], $stripTrim['blogpost'], False);
+			unset($_POST);
 		} elseif($_POST['submit'] == 'Edit post') {
 			$message = create_post($connect, $_SESSION['postID'], $_SESSION['user_id'], $stripTrim['title'], $stripTrim['blogpost'], True);
+			unset($_POST);
 		}
 	}
 }
