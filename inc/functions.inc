@@ -64,7 +64,6 @@ function error_msg($err_type, $err_msg, $err_file, $err_line){
 
 }
 
-
 /**
  * @desc: Retrieves all the bloggers that are registered
  * @param: dbconnection $connect
@@ -151,17 +150,23 @@ function get_blogposts($id, $connect, $postTitle) {
 			$content = nl2br($blogpost['post_content']);
 			$postDate = $blogpost['post_date'];
 			
+			$splitDateTime = explode(" ", $postDate);
+			$date = explode("-", $splitDateTime[0]);
+			$time = $splitDateTime[1];
+			
+			$reformatDate = $date[2] . "-" . $date[1] . "-" . $date[0];
+			
 			if(!empty($blogpost['post_edited'])){
-				$edited = "Last edited on ";
+				$edited = "Last edited on:";
 			} else {
-				$edited = "Date of creation ";
+				$edited = "Date of creation:";
 			}
 			
 			if (!$postTitle) {
 				echo "<div class=\"post-wrapper\">
 				<div class=\"post-content\">
 					<h3>$title</h3>
-					<p class=\"namedate\"><b>$bloggerName $bloggerPref $bloggerSur</b> | $edited$postDate<p>
+					<p class=\"namedate\"><b>$bloggerName $bloggerPref $bloggerSur</b> | $edited" . " " . "$reformatDate" . " time: " . "$time<p>
 				</div>
 				<div class=\"post-body\">
 					$content
