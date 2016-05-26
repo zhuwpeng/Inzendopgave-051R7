@@ -92,11 +92,11 @@ include_once 'inc/header.inc';
 	                <h3>You might want to read this first!</h3>
 	                <p>
 	                    Bloggers is a website where everyone can register and create blogposts.
-	                    It is a realy basic and easy to use website where people can write everything they want.
+	                    It is a really basic and easy to use website where people can write everything they want.
 	                </p>
 	                <p>
 	                    All you have to do is register an account by clicking on "Register" on the right side of the menu.
-	                    Once you have registered your account you will receive your password via e-mail. Once you have 
+	                    After you have registered your account you will receive your password via e-mail. Once you have 
 	                    received the e-mail you can login using your e-mail and password and start posting whatever comes 
 	                    to your mind or manage your earlier blogposts if you have any!
 	                </p>
