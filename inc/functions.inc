@@ -197,6 +197,7 @@ function create_post($connect, $postID, $authorID, $title, $content, $edited) {
 	$postContent = mysqli_real_escape_string($connect, $content);
 	$date = mysqli_real_escape_string($connect, date('Y-m-d H:i:s'));
 	
+	//Check if the blog post is being edited or not
 	if (!$edited) {
 		$insertQuery = "INSERT INTO posts (post_id,
 											post_author,
@@ -220,9 +221,13 @@ function create_post($connect, $postID, $authorID, $title, $content, $edited) {
 	
 	$insertResult = mysqli_query($connect, $insertQuery) or die("Could not insert data into the database. " . mysqli_error($connect));
 	
-	if (mysqli_affected_rows($connect) == 1 && !$edited) {
-		return "Your blogpost has been created!";
-	} else {
-		return "Your blogpost has been edited!";
+// 	if (mysqli_affected_rows($connect) == 1 && !$edited) {
+// 		return "Your blogpost has been created!";
+// 	} else {
+// 		return "Your blogpost has been edited!";
+// 	}
+
+	if (mysqli_affected_rows($connect) == 1) {
+		return true;
 	}
 }

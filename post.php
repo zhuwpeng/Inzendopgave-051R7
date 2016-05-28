@@ -29,17 +29,25 @@ if (isset($_POST['submit'])) {
 	
 	if (empty($error)) {
 		if ($_POST['submit'] == 'Create post'){
-			$message = create_post($connect, NULL, $_SESSION['user_id'], $stripTrim['title'], $stripTrim['blogpost'], False);
-			unset($_POST);
-		} elseif($_POST['submit'] == 'Edit post') {
-			$message = create_post($connect, $_SESSION['postID'], $_SESSION['user_id'], $stripTrim['title'], $stripTrim['blogpost'], True);
-			unset($_POST);
+			if (create_post($connect, NULL, $_SESSION['user_id'], $stripTrim['title'], $stripTrim['blogpost'], False)) {
+	 			unset($_POST);
+	 			header("Location: index.php?page=editposts");
+	 			exit();
+			}
+		} elseif ($_POST['submit'] == 'Edit post') {
+			
+			if(create_post($connect, $_SESSION['postID'], $_SESSION['user_id'], $stripTrim['title'], $stripTrim['blogpost'], True)) {
+				unset($_POST);
+				header("Location: index.php?page=editposts");
+				exit();
+			}
 		}
 	}
-}
+} 
 
 if (isset($_GET['editPID']) && isset($_SESSION['user_id'])) {
 	$postID = $_SESSION['postID'] = $_GET['editPID'];
+	
 	//Retrieve post title and content
 	$retrieveQuery = "SELECT * FROM posts WHERE post_id = $postID";
 	$retrieveResult = mysqli_query($connect, $retrieveQuery) or die("Could not access the database " . mysqli_error($connect));
@@ -49,6 +57,15 @@ if (isset($_GET['editPID']) && isset($_SESSION['user_id'])) {
 		$postTitle = $retrieveData['post_title'];
 		$postContent = $retrieveData['post_content'];
 	}
+}
+
+if (isset($_POST['reset']) && $_POST['reset'] == "Clear") {
+	unset($_POST);
+}
+
+if (isset($_POST['reset']) && $_POST['reset'] == "Undo changes"){
+	header("Location: post.php?editPID=" . $_SESSION['postID'] ."");
+	exit();
 }
 ?>
 <div class="wrapper">
@@ -81,6 +98,7 @@ if (isset($_GET['editPID']) && isset($_SESSION['user_id'])) {
 				<textarea rows="15" cols="50" name="blogpost"><?php if(isset($_POST['blogpost'])){ echo htmlentities($_POST['blogpost']);}elseif(isset($_GET['editPID'])){ echo $postContent; }else{ echo "";}?></textarea>
 				
 				<input class="btn" type="submit" name="submit" <?php if (!isset($_GET['editPID'])){ echo "value=\"Create post\"";}else{echo "value=\"Edit post\"";}?>>
+				<input class="btn" type="submit" name="reset" <?php if (!isset($_GET['editPID'])){ echo "value=\"Clear\"";}else{echo "value=\"Undo changes\"";}?>>
 			</form>
 		</div>
 		<?php } else {?>

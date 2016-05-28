@@ -2,11 +2,6 @@
 include_once 'inc/header.inc';
 
 $message = "";
-$nameError = "";
-$lnPrefixError = "";
-$surnameError = "";
-$emailError = "";
-$passwordError = "";
 
 $error = array('name' => "",
 			'surname' => "",
@@ -14,7 +9,7 @@ $error = array('name' => "",
 );
 
 $errortype = array('empty' => array('name' => "No name filled in!",
-								'surname' => "No surname filled in!",
+								'surname' => "No lastname filled in!",
 								'email' => "No e-mail filled in!"),
 				'invalid' => array('email' => "E-mail must not contain 'admin' and should be as follows: '2 characters @ 2 characters .nl' (ab@cd.nl)",
 								'emailexist' => "E-mail already exist!")
@@ -137,18 +132,18 @@ if(isset($_POST['reset']) && $_POST['reset'] == "Reset"){
 			<h2>Register</h2>
 			<form method="POST" action="register.php">	
 				<span class="error"><?php if(isset($error['name'])) {echo $error['name'];}?></span>
-				<label for="form-name">First name:</label>
+				<label for="form-name">First name:*</label>
 				<input type="text" id="form-name" name="name" value="<?php if(isset($_POST['name'])){echo htmlentities($_POST['name']);}else{ echo "";}?>">
 				
 				<span class="error"><?php if(isset($error['surname'])) {echo $error['surname'];}?></span>
-				<label for="form-surname">Last name:</label>
+				<label for="form-surname">Last name:*</label>
 				<input type="text" id="form-surname" name="surname" value="<?php if(isset($_POST['surname'])){echo htmlentities($_POST['surname']);}else{ echo "";}?>">
 				
 				<label for="form-lnprefix">Last name prefix:</label>
 				<input type="text" id="form-lnprefix" name="ln_prefix" value="<?php if(isset($_POST['ln_prefix'])){echo htmlentities($_POST['ln_prefix']);}else{ echo "";}?>">
 				
 				<span class="error"><?php if(isset($error['email'])) {echo $error['email'];}?></span>
-				<label for="form-email">E-mail:</label>
+				<label for="form-email">E-mail:*</label>
 				<input type="text" id="form-email" name="email" value="<?php if(isset($_POST['email'])){echo htmlentities($_POST['email']);}else{ echo "";}?>">
 				
 				<div class="submit_reset">

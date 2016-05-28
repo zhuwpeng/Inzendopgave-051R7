@@ -52,7 +52,8 @@ include_once 'inc/header.inc';
 	            if (isset($_GET['id'])){
 	            	//Retrieve all the blogposts from any blogger in the list
 	            	get_blogposts($_GET['id'], $connect, false);
-	            } elseif (isset($_GET['page']) && $_GET['page']=="editposts" && isset($_SESSION['user_id'])) {?>
+	            } elseif (isset($_GET['page']) && $_GET['page']=="editposts" && isset($_SESSION['user_id'])) {
+	            	?>
 	            	<h2>Edit or remove blogposts</h2>
 	            	<table class="table">
 		            	<tr>
