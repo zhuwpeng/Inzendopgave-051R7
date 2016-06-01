@@ -1,5 +1,4 @@
 <?php
-
 // Connection information
 $user = "user";
 $password = "password";

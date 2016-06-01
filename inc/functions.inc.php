@@ -205,7 +205,7 @@ function create_post($connect, $postID, $authorID, $title, $content, $edited) {
 											post_content,
 											post_date,
 											post_edited) 
-									VALUES ('$postID',
+									VALUES ('NULL',
 											'$author',
 											'$postTitle',
 											'$postContent',

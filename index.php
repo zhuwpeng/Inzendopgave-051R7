@@ -1,6 +1,29 @@
 <?php
-include_once 'inc/header.inc';
+include "inc/functions.inc.php";
+include "db_connect.php";
+session_start();
+set_error_handler('error_msg');
 ?>
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+
+    <title>Inzendopdracht 051R7</title>
+
+</head>
+<body>
+    <div id="container">
+		<?php
+		include_once 'inc/header.inc.php';
+		?>
         <div class="wrapper">
             <div class="side-wrapper">
             	
@@ -111,6 +134,9 @@ include_once 'inc/header.inc';
 	            ?>
             </div>
         </div>
-<?php 
-include_once 'inc/footer.inc';
-?>
+		<?php 
+		include_once 'inc/footer.inc.php';
+		?>
+    </div>
+</body>
+</html>
