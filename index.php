@@ -1,7 +1,7 @@
 <?php
+session_start();
 include "inc/functions.inc.php";
 include "db_connect.php";
-session_start();
 set_error_handler('error_msg');
 ?>
 

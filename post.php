@@ -1,12 +1,10 @@
 <?php
+session_start();
 include "inc/functions.inc.php";
 include "db_connect.php";
-session_start();
 set_error_handler('error_msg');
 
 $message = "";
-$titleError ="";
-$blogpostError = "";
 
 $errors = array("empty" => array("title" => "You have to give your post a title.",
 		"blogpost" => "Please write something in your blogpost."));
@@ -39,7 +37,7 @@ if (isset($_POST['submit'])) {
 			}
 		} elseif ($_POST['submit'] == 'Edit post') {
 				
-			if(create_post($connect, $_SESSION['postID'], $_SESSION['user_id'], $stripTrim['title'], $stripTrim['blogpost'], True)) {
+			if(create_post($connect, $_POST['postID'], $_SESSION['user_id'], $stripTrim['title'], $stripTrim['blogpost'], True)) {
 				unset($_POST);
 				header("Location: index.php?page=editposts");
 				exit();
@@ -57,8 +55,8 @@ if (isset($_GET['editPID']) && isset($_SESSION['user_id'])) {
 
 	if (mysqli_num_rows($retrieveResult) == 1) {
 		$retrieveData = mysqli_fetch_assoc($retrieveResult);
-		$postTitle = $retrieveData['post_title'];
-		$postContent = $retrieveData['post_content'];
+		$postTitle = $retrieveData['title'];
+		$postContent = $retrieveData['content'];
 	}
 }
 
@@ -67,7 +65,7 @@ if (isset($_POST['reset']) && $_POST['reset'] == "Clear") {
 }
 
 if (isset($_POST['reset']) && $_POST['reset'] == "Undo changes"){
-	header("Location: post.php?editPID=" . $_SESSION['postID'] ."");
+	header("Location: post.php?editPID=" . $_POST['postID'] ."");
 	exit();
 }
 ?>
@@ -119,7 +117,7 @@ if (isset($_POST['reset']) && $_POST['reset'] == "Undo changes"){
 						<span class = error><?php if(isset($error['blogpost'])){echo $error['blogpost'];}?></span>
 						<label for="form-blogpost">Blog post:</label>
 						<textarea rows="15" cols="50" name="blogpost"><?php if(isset($_POST['blogpost'])){ echo htmlentities($_POST['blogpost']);}elseif(isset($_GET['editPID'])){ echo $postContent; }else{ echo "";}?></textarea>
-						<input type="hidden" name="postID" value="<?php if (!isset($_GET['editPID'])){echo htmlspecialchars($_GET['editPID']);}else{ echo "";}?>">
+						<input type="hidden" name="postID" value="<?php if (isset($_GET['editPID'])){echo htmlspecialchars($_GET['editPID']);}else{ echo "";}?>">
 						
 						<input class="btn" type="submit" name="submit" <?php if (!isset($_GET['editPID'])){ echo "value=\"Create post\"";}else{echo "value=\"Edit post\"";}?>>
 						<input class="btn" type="submit" name="reset" <?php if (!isset($_GET['editPID'])){ echo "value=\"Clear\"";}else{echo "value=\"Undo changes\"";}?>>

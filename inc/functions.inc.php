@@ -26,7 +26,7 @@ function get_navbar() {
  * @param: e-mail $email
  * @return: string
  */
-function test_email($email, $logreg)
+function test_email($email)
 {
 	$match_pattern = '/^[a-zA-Z]*[a-zA-Z]*@[a-zA-Z]*[a-zA-Z]*.nl$/';
 	$match = preg_match($match_pattern, $email);
@@ -40,15 +40,7 @@ function test_email($email, $logreg)
 		if (strlen($name) < 2 || strlen($domain) < 2) {
 			return false;
 		} else {
-			if($logreg == "Register"){
-				if (preg_match('/admin/i', $email)) {
-					return false;
-				} else {
-					return true;
-				}
-			} else {
-				return true;
-			}
+			return true;
 		}
 	} else {
 		return false;
@@ -135,10 +127,10 @@ function get_blogposts($id, $connect, $postTitle) {
 	}
 	
 	//Retrieve blogposts
-	if ($bloggerEmail == "admin@admin.nl") {
-		$blogpostQuery = "SELECT post_id, post_author, post_title, post_content, post_date, post_edited FROM posts ORDER BY post_date DESC";
+	if ($bloggerName == "admin") {
+		$blogpostQuery = "SELECT post_id, user_id, title, content, date, edited FROM posts ORDER BY date DESC";
 	} else {
-		$blogpostQuery = "SELECT post_id, post_author, post_title, post_content, post_date, post_edited FROM posts WHERE post_author ='$bloggerID' ORDER BY post_date DESC";
+		$blogpostQuery = "SELECT post_id, user_id, title, content, date, edited FROM posts WHERE user_id ='$bloggerID' ORDER BY date DESC";
 	}
 	
 	$blogpostResult = mysqli_query($connect, $blogpostQuery) or die("Could not retrieve data. " . mysqli_error($connect));
@@ -146,9 +138,9 @@ function get_blogposts($id, $connect, $postTitle) {
 	if (mysqli_num_rows($blogpostResult) > 0) {
 		while ($blogpost = mysqli_fetch_assoc($blogpostResult)){
 			$postID = $blogpost['post_id'];
-			$title = $blogpost['post_title'];
-			$content = nl2br($blogpost['post_content']);
-			$postDate = $blogpost['post_date'];
+			$title = $blogpost['title'];
+			$content = nl2br($blogpost['content']);
+			$postDate = $blogpost['date'];
 			
 			$splitDateTime = explode(" ", $postDate);
 			$date = explode("-", $splitDateTime[0]);
@@ -156,7 +148,7 @@ function get_blogposts($id, $connect, $postTitle) {
 			
 			$reformatDate = $date[2] . "-" . $date[1] . "-" . $date[0];
 			
-			if(!empty($blogpost['post_edited'])){
+			if(!empty($blogpost['edited'])){
 				$edited = "Last edited on:";
 			} else {
 				$edited = "Date of creation:";
@@ -200,33 +192,27 @@ function create_post($connect, $postID, $authorID, $title, $content, $edited) {
 	//Check if the blog post is being edited or not
 	if (!$edited) {
 		$insertQuery = "INSERT INTO posts (post_id,
-											post_author,
-											post_title,
-											post_content,
-											post_date,
-											post_edited) 
-									VALUES ('NULL',
+											user_id,
+											title,
+											content,
+											date,
+											edited) 
+									VALUES (NULL,
 											'$author',
 											'$postTitle',
 											'$postContent',
 											'$date',
 											'0')";
 	} else {
-		$insertQuery = "UPDATE posts SET post_title = '$postTitle',
-											post_content = '$postContent',
-											post_date = '$date',
-											post_edited = '1'
-									WHERE post_id = '$postID'";
+		$insertQuery = "UPDATE posts SET title = '$postTitle',
+											content = '$postContent',
+											date = '$date',
+											edited = '1'
+										WHERE post_id = '$postID'";
 	}
 	
 	$insertResult = mysqli_query($connect, $insertQuery) or die("Could not insert data into the database. " . mysqli_error($connect));
 	
-// 	if (mysqli_affected_rows($connect) == 1 && !$edited) {
-// 		return "Your blogpost has been created!";
-// 	} else {
-// 		return "Your blogpost has been edited!";
-// 	}
-
 	if (mysqli_affected_rows($connect) == 1) {
 		return true;
 	}

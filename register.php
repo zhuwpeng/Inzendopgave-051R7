@@ -1,7 +1,7 @@
 <?php
+session_start();
 include "inc/functions.inc.php";
 include "db_connect.php";
-session_start();
 set_error_handler('error_msg');
 
 $message = "";
@@ -12,10 +12,11 @@ $error = array('name' => "",
 );
 
 $errortype = array('empty' => array('name' => "No name filled in!",
-		'surname' => "No lastname filled in!",
-		'email' => "No e-mail filled in!"),
-		'invalid' => array('email' => "E-mail must not contain 'admin' and should be as follows: '2 characters @ 2 characters .nl' (ab@cd.nl)",
-				'emailexist' => "E-mail already exist!")
+									'surname' => "No lastname filled in!",
+									'email' => "No e-mail filled in!"),
+					'invalid' => array('email' => "E-mail should be as follows: '2 characters @ 2 characters .nl' (ab@cd.nl)",
+										'emailexist' => "E-mail already exist!",
+										'name' => "Only one user allow with admin as name!")
 );
 
 if (isset($_POST['submit']) && $_POST['submit'] == 'Register') {
@@ -41,7 +42,7 @@ if (isset($_POST['submit']) && $_POST['submit'] == 'Register') {
 
 	if (empty($error['email'])) {
 		//Validate email
-		if (test_email($stripTrim['email'], $_POST['submit'])== false) {
+		if (test_email($stripTrim['email'])== false) {
 			$error['email']= $errortype['invalid']['email'];
 		} else {
 			//Check if e-mail exist
@@ -53,7 +54,21 @@ if (isset($_POST['submit']) && $_POST['submit'] == 'Register') {
 			}
 		}
 	}
-
+	
+	if (empty($error['name'])){
+		if (preg_match('/admin/i', $stripTrim['name'])){
+			$nameQuery = "SELECT name FROM users WHERE name = 'admin'";
+			$nameResult = mysqli_query($connect, $nameQuery);
+			$nameRows = mysqli_num_rows($nameResult);
+			
+			if($nameRows > 0){
+				$error['name']= $errortype['invalid']['name'];
+			} else {
+				$stripTrim['name'] = strtolower($stripTrim['name']);
+			}
+		}
+	}
+	
 	$error = array_filter($error);
 
 	if(empty($error)) {
@@ -61,46 +76,66 @@ if (isset($_POST['submit']) && $_POST['submit'] == 'Register') {
 		foreach($stripTrim as $key => $input) {
 			$escInput[$key] = mysqli_real_escape_string($connect, $input);
 		}
-
-		$name = ucfirst($escInput['name']);
+		
+		$name = $escInput['name'];
 		$ln_prefix = $escInput['ln_prefix'];
 		$surname = ucfirst($escInput['surname']);
 		$email = $escInput['email'];
 		$password = random_password();
 		$passencrypt = md5($password);
 		$reg_date = date('Y-m-d');
-
+		
+		if ($name == 'admin') {
+			$memberType = 'admin';
+		} else {
+			$memberType = 'member';
+		}
+		
 		//Insert input into database
 		$inputQuery = "INSERT INTO users (user_id,
-		name,
-		ln_prefix,
-		surname,
-		email,
-		password,
-		usertype,
-		reg_date)
-		VALUES (NULL,
-		'$name',
-		'$ln_prefix',
-		'$surname',
-		'$email',
-		'$passencrypt',
-		'member',
-		'$reg_date')";
+											name,
+											ln_prefix,
+											surname,
+											email,
+											password,
+											usertype,
+											reg_date)
+											VALUES (NULL,
+											'$name',
+											'$ln_prefix',
+											'$surname',
+											'$email',
+											'$passencrypt',
+											'$memberType',
+											'$reg_date')";
+		
 		$resultQuery = mysqli_query($connect, $inputQuery) or die("Could insert data into the database. " . mysqli_error($connect));
 
 		if (mysqli_affected_rows($connect) == 1) {
-			$confirmation = (mail($email, "Registratie",
-					"Welcome to Bloggers!\r\n
-					This is a confirmation e-mail from your registration.\r\n
-					Below are your username and password. Keep them somewhere safe\r\n
-					and never share your password to anyone!\r\n
-					Username: $email\r\n
-					Password: $password\r\n
-					\r\n
-					Thank you for your registration and have fun blogging!\r\n",
-					"Van: info@bloggers.nl"));
-				
+			if($memberType == 'admin'){
+				$subject = "Admin account";
+				$content = 
+"IMPORTANT\r\n
+This is your admin account! Keep your username and password\r\n
+somewhere safe!\r\n
+Username:$email
+Password: $password\r\n
+\r\n";
+			} else {
+				$subject = "Registration";
+				$content = 
+"Welcome to Bloggers!\r\n
+This is a confirmation e-mail from your registration.\r\n
+Below are your username and password. Keep them somewhere safe\r\n
+and never share your password to anyone!\r\n
+Username: $email
+Password: $password\r\n
+\r\n
+Thank you for your registration and have fun blogging!\r\n";
+			}
+			
+			$confirmation = (mail($email, $subject, $content,"Van: info@bloggers.nl"));
+
 			if ($confirmation) {
 				$message = "Your account has been succesfully created! Your password will be sent to your mailbox shortly!";
 				unset($_POST);

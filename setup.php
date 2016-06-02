@@ -41,11 +41,11 @@ $usersQuery = "user_id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 
 $blogTable = "posts";
 $blogQuery = "post_id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                post_author BIGINT NOT NULL,
-                post_title TEXT NOT NULL,
-                post_content LONGTEXT NOT NULL,
-                post_date DATETIME,
-				post_edited BOOLEAN NULL";
+                user_id BIGINT NOT NULL,
+                title TEXT NOT NULL,
+                content LONGTEXT NOT NULL,
+                date DATETIME,
+				edited BOOLEAN NULL";
 
 // Check if database exist
 if (!mysqli_select_db($connect, 'dbloi')) {
@@ -64,27 +64,4 @@ if (!mysqli_select_db($connect, 'dbloi')) {
     make_table($connect, $usersQuery, $usersTable);
     make_table($connect, $blogQuery, $blogTable);
     
-}
-
-$checkAdminQuery = "SELECT user_id FROM users WHERE name = 'Admin'";
-$checkAdminResult = mysqli_query($connect, $checkAdminQuery);
-
-if (mysqli_num_rows($checkAdminResult) == 0) {
-    // Create administrator user
-    
-    $adminpass = md5('password');
-    $reg_date = date('Y-m-d');
-    $adminQuery = "INSERT INTO users (user_id, name, surname, email, password, usertype, reg_date) VALUES (NULL, 'Admin', 'Admin', 'admin@admin.nl', '$adminpass', 'Admin', '$reg_date')";
-    mysqli_query($connect, $adminQuery);
-
-    $checkAdminQuery = "SELECT user_id FROM users WHERE name = 'Admin'";
-    $checkAdminResult = mysqli_query($connect, $checkAdminQuery);
-    
-    if (mysqli_num_rows($checkAdminResult) > 0) {
-        echo "Administrator account has been created!<br />";
-        echo "The username is 'admin@admin.nl'. <br />";
-        echo "The password is 'password'. <br />";
-    } else {
-        echo "The Administrator account already exist!";
-    }
 }

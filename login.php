@@ -1,7 +1,7 @@
 <?php
+session_start();
 include "inc/functions.inc.php";
 include "db_connect.php";
-session_start();
 set_error_handler('error_msg');
 
 $message = "";
@@ -19,7 +19,7 @@ if (isset($_POST['submit']) && $_POST['submit'] == 'Login') {
 		$usernameError = "Fill in your e-mail!";
 		$error = true;
 	} else {
-		if(test_email($email, $_POST['submit']) == false) {
+		if(test_email($email) == false) {
 			$emailError = "Invalid e-mail entered";
 			$error = true;
 		}
